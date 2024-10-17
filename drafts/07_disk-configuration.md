@@ -210,6 +210,160 @@ I restarted the laptop, and it's
 A start job is running for /dev/disk/by-partlabel/disk-nvme-efi
 ```
 
+<!-- TODO Add panic gif -->
+
+Oh no! I've bricked my laptop!
+
+But wait. Here is where the true magic of NixOS emerges. Restart the machine and
+watch for the bootloader to show. See that list of boot entries?
+
+Those represent the different configurations you have applied. Use the arrow
+keys to scroll back to the previous configuration, press ENTER, and _boom_. The
+machine is booting and fixed again.
+
+<!-- TODO I am invincible gif -->
+
+OK, so the problem is something to do with mounting disks, and that probably
+means there's a change in `/etc/fstab` between one generation and the next.
+
+There is **undoubtedly** a better way to check this, but we only have a couple
+of generations so far so it's easy enough to check each one.
+
+## Time for a wee aside
+
+If you've been relying on this blog alone so far for your information on how
+Nix/NixOS works, then you have no idea how it works.
+
+I'll try and fix a tiny bit of that understanding.
+
+Nix (and NixOS) don't store packages and files in the normal place. Run `which
+bash` on a normal Linux distro and you'll get `/usr/bin/bash` as the response.
+
+Try that on a NixOS installation and you'll get something weird:
+`/run/current-system/sw/bin/bash`. If you're using Home Manager (more on that
+later), you'll get something even more different.
+
+Take a closer look at that path:
+
+```bash
+ls -l /run/current-system/sw/bin/bash
+```
+
+```
+lrwxrwxrwx 5 root root 76 Jan  1  1970 /run/current-system/sw/bin/bash -> /nix/store/qqz0gj9iaidabp7g34r2fb9mds6ahk8i-bash-interactive-5.2p32/bin/bash
+```
+
+Woah. It's a symlink to a path with a hash in it. So if I wanted to change my
+system bash installation, I could update that symlink to point to a different
+bash with a different hash in the path.
+
+Each file/package/library managed by Nix/NixOS is stored in `/nix/store` in a
+unique directory. The directory name is calculated using the hash of the
+contents of the directory, so a different version of bash would have a different
+hash.
+
+So when you run a `nixos-rebuild switch`, it downloads/builds/creates these
+directories in the `/nix/store`, and then updates the symlinks to point to the
+new directory.
+If you roll back, all the system needs to do is use the previous symlinks.
+
+---
+
+So, `/etc/fstab` is broken in the new configuration version.
+
+Let's have a look at all the different versions of `/etc/fstab` we have, we'll
+follow the chain of symlinks until we get to the store:
+
+```bash
+ls -l /etc/fstab
+```
+
+```
+lrwxrwxrwx 1 root root 17 Oct 10:21 /etc/fstab -> /etc/static/fstab
+```
+
+OK, try that one:
+
+```bash
+ls -l /etc/static/fstab
+```
+
+```
+lrwxrwxrwx 1 root root 53 Jan  1  1970 /etc/static/fstab -> /nix/store/fg2vipjjqva7mf76ncqxbfr44r1dsqhg-etc-fstab
+```
+
+Huh. Weird date: 0.
+
+So we've definitely confirmed that the actual `fstab` file is stored in the nix
+store. Let's have a look at _all_ of our fstabs for all our generations:
+
+```bash
+cat /nix/store/*-etc-fstab | grep boot
+```
+
+```
+/dev/disk/by-partlabel/disk-nvme-efi /boot vfat defaults,umask=0077 0 2
+/dev/disk/by-partlabel/efi /boot vfat fmask=0022,dmask=0022 0 2
+/dev/disk/by-partlabel/efi /boot vfat fmask=0022,dmask=0022 0 2
+```
+
+That top result has got to be the offending one 🤔. Why is the name of the disk
+wrong...? I guess `disko` expects drives to be named a particular thing, and
+we've not matched their naming scheme. Remember the nesting of our disks.nix
+data is:
+
+```
+disko -> devices -> disk -> nvme -> content -> partitions -> efi
+```
+
+which looks suspiciously similar to the path that disko is detecting. How can we
+set this so it'll continue to work if we reinstall, but will work now?
+
+Oooh, looking at the [source code](https://github.com/nix-community/disko/blob/d7d57edb72e54891fa67a6f058a46b2bb405663b/lib/types/gpt.nix#L70)
+there is a `label` option, and the default is
+`"${config._parent.type}-${config._parent.name}-${partition.config.name}"`. That
+looks suspiciously like what disko is expecting of our disk.
+
+<!-- TODO Link to commit 74f0a55 -->
+
+While we're here, we should fix something _else_ that's wrong. The `efi`
+partition that I made manually started at `1MB`, not at the very start of the
+disk. I can't for the life of me remember why I do this, but I've done it for a
+very long time so now it's become doctrine.
+
+Anyway, we should match that in the disko config.
+
+<!-- TODO Link to commit 9886d8b -->
+
+The other thing that is loopy about my configuration is that I **changed the
+size of the logical volumes!!**. I don't _think_ disko will try to adjust the
+existing volumes to suit, and it shouldn't affect how they are mounted, so it's
+a safe change.
+
+It _does_ mean that the code is a lie though.
+
+Let's see if that fixes things:
+
+```bash
+sudo nixos-rebuild switch --flake .
+```
+
+```
+building the system configuration...
+activating the configuration...
+setting up /etc...
+reloading user units for stooj...
+restarting sysinit-reactivation.target
+reloading the following units: -.mount, boot.mount
+the following new units were started: sysinit-reactivation.target, systemd-tmpfiles-resetup.service
+```
+
+<!-- TODO Gif of Bingo saying Ooos -->
+
+Our partitioning scheme is _reproducable_. We can reinstall NixOS on this
+machine and it will have the correct partitions without us manually partitioning
+things like it's 1995.
+
 # References
 
 - [disko/docs/HowTo.md - Installing NixOS module · nix-community/disko](https://github.com/nix-community/disko/blob/master/docs/HowTo.md#installing-nixos-module)
@@ -217,3 +371,4 @@ A start job is running for /dev/disk/by-partlabel/disk-nvme-efi
 - [GPT fdisk - ArchWiki](https://wiki.archlinux.org/title/GPT_fdisk)
 - [FAT - ArchWiki](https://wiki.archlinux.org/title/FAT)
 - [LVM - ArchWiki](https://wiki.archlinux.org/title/LVM)
+- [disko/lib/types/gpt.nix](https://github.com/nix-community/disko/blob/d7d57edb72e54891fa67a6f058a46b2bb405663b/lib/types/gpt.nix#L70)
