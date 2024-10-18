@@ -112,3 +112,7 @@ need to run those two `nixos-enter` commands.
 And once we get a network cable, we won't need to configure the wireless!
 
 If something happens to this machine, it'll be _trivial_ to reinstall the OS.
+
+Meanwhile, back on `proteus`, it's going to complain the next time you try to
+SSH into `drummer`. That's because the system SSH keys have been regenerated, so
+you'll need to delete the appropriate lines in `~/.ssh/known_hosts`.
