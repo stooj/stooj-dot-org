@@ -116,3 +116,13 @@ If something happens to this machine, it'll be _trivial_ to reinstall the OS.
 Meanwhile, back on `proteus`, it's going to complain the next time you try to
 SSH into `drummer`. That's because the system SSH keys have been regenerated, so
 you'll need to delete the appropriate lines in `~/.ssh/known_hosts`.
+
+There is some extra things to do because our config isn't complete yet.
+
+1. If you look in `/etc/nixos` on `drummer` now, you'll see it's empty. The
+   configuration was pulled directly from GitHub so it's not local.
+   
+   To fix that, copy it across from `proteus` and (because we don't have git on
+   `drummer` yet) delete the `.git` directory on drummer. Or maybe you've not
+   been using git yet. 🤷
+2. I can't think of a #2.
