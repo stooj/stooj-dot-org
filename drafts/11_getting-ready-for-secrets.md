@@ -64,10 +64,6 @@ Once all that's done, we're ready to store secrets in our configuration.
 
 Enter [sops-nix](https://github.com/Mic92/sops-nix).
 
-It's a way to keep secrets in your Nix config.
-And [sops](https://github.com/getsops/sops#2usage) Secrets OPerationS is a tool for managing secrets.
-
-[^NOTE]: Sops can use different backends, it'd be cool if it could use ESC.
 
 # References
 
