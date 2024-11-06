@@ -323,14 +323,41 @@ Beautiful. We have secrets! Now how do we use them?
 Well, after all that nonsense, I can encrypt and decrypt secrets using my GPG
 key. How is drummer going to decrypt them?
 
-SSH keys, did I mention that before? 
+SSH keys, did I mention that before?
 
+Drummer already has SSH keys for the root user, and that's the one we're going
+to use for system-level secrets.
 
----
+You can't actually directly use SSH keys (sops uses GPG or age), so I'm going to
+have my GPG key as the "main" key for everything, and convert SSH public keys to
+age keys for targeting specific machines.
 
-So again: how do we use them?
+```bash
+nix-shell --packages ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
+```
 
-It's *tricky*. The secrets aren't (necessarily) available during the nix config
+That command will output an age public key that we can add to the `.sops.yaml`
+file.
+
+First of all, I need to fix a mistake in the `.sops.yaml` file that I just
+spotted - that nested `keys` dict shouldn't be there (even if it still works).
+
+<!-- TODO Link to commit 98b371b -->
+
+Right, add that age key that we generated to the `.sops.yaml` file:
+
+<!-- TODO Link to commit cc79b55 -->
+
+And then we regenerate our `secrets.yaml` key so that it is encrypted with both
+the GPG and the age key:
+
+```bash
+nix-shell --packages sops --run "sops updatekeys secrets.yaml"
+```
+
+OK, I think that's it. So how do we actually _use_ these secrets?
+
+It's _tricky_. The secrets aren't (necessarily) available during the nix config
 "build" phase, so you can't include secret values inside nix-managed config
 files. Sops-nix decrypts the files and puts them in a directory on the target
 machine, and then you have to find a way of getting your configuration to
@@ -345,6 +372,64 @@ and it'll vary from package to package.
 systemd lets you use environment files that get resolved in unit files.
 Environment files are simple to make, just a single line.
 
+---
+
+<!-- TODO This should be recorded somewhere -->
+
+The other thing I'm going to do is **record** the root SSH keys for drummer in
+my password store, so we can use _the same keys_ when we rebuild the machine.
+
+I don't _have_ pass installed or configured on drummer yet, which is probably an
+oversight. We're going to have to put together some misguided command to pull
+the ssh key over the network.
+
+```bash
+# On Proteus, which has drummer's password for stoo stored in
+# `machines/drummer/stoo`:
+ssh 192.168.1.5 \
+    "echo $(pass machines/drummer/stoo) \
+    | sudo --stdin cat /etc/ssh/ssh_host_ed25519_key" \
+  | pass insert --multiline machines/drummer/ssh/key
+```
+
+This is a silly command, but it works.
+
+1. SSH to drummer (192.168.1.5)
+2. Instead of opening a normal shell, run the command wrapped in quotation
+   marks:
+   1. Echo the sudo password for stoo on drummer by grabbing it from my password
+      store and pipe it to the next command
+   2. As sudo (reading the password from standard in (the previous pipe (this
+      sentence is starting to feel like LISP))) cat the SSH private key to
+      stdout
+3. Meanwhile, back on proteus, pipe the result of the previous command into a
+   password store file (machines/drummer/ssh/key) and warn pass that it's going
+   to be multiline, so store everything that gets piped to it (rather than just
+   the first line).
+
+Simple.
+
+We need to do the same for the public key. Actually, we don't need to at all,
+but I'm going to in case.
+
+Actually, why would I bother? If you can have the private key, you can generate
+a public key.
+
+<!-- END TODO  -->
+
+<!-- TODO DO I NEED TO DO THIS? -->
+
+We also need to add the public key as a file in the repo, and it's going to be
+an age file.
+
+```bash
+mkdir --parents ~/code/unmanaged/nix-config/keys/hosts
+nix-shell --packages ssh-to-age --run \
+  'cat /etc/ssh/ssh_host_ed25519_key.pub \
+  | ssh-to-age -o ~/code/unmanaged/nix-config/keys/hosts/drummer.age'
+```
+
+<!-- END TODO  -->
 
 [^1]: [feature request: support for external key management · Issue #629 · Mic92/sops-nix](https://github.com/Mic92/sops-nix/issues/629)
 
@@ -358,3 +443,6 @@ Environment files are simple to make, just a single line.
 - [nixpkgs/nixos/modules/programs/vim.nix at nixos-24.05 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/programs/vim.nix)
 - [Yubikey - NixOS Wiki](https://nixos.wiki/wiki/Yubikey)
 - [NixOS Search - Options - programs.gnupg.agent](https://search.nixos.org/options?channel=24.05&show=programs.gnupg.agent.pinentryPackage&from=0&size=50&sort=relevance&type=packages&query=programs.gnupg.agent)
+- [linux - How do I run a sudo command on a remote machine using ssh? - Super User](https://superuser.com/questions/1613852/how-do-i-run-a-sudo-command-on-a-remote-machine-using-ssh)
+- [linux - How to provide password directly to the sudo su -<someuser> in shell scripting - Super User](https://superuser.com/questions/1351872/how-to-provide-password-directly-to-the-sudo-su-someuser-in-shell-scripting/1351876#1351876)
+- [My New Network (and encrypting secrets with sops) - sam@samleathers.com ~ $](https://samleathers.com/posts/2022-02-11-my-new-network-and-sops.html)
