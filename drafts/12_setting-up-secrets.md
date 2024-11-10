@@ -355,6 +355,8 @@ the GPG and the age key:
 nix-shell --packages sops --run "sops updatekeys secrets.yaml"
 ```
 
+<!-- TODO Link to commit c1a6342 -->
+
 OK, I think that's it. So how do we actually _use_ these secrets?
 
 It's _tricky_. The secrets aren't (necessarily) available during the nix config
@@ -371,6 +373,131 @@ and it'll vary from package to package.
 
 systemd lets you use environment files that get resolved in unit files.
 Environment files are simple to make, just a single line.
+
+~~First, we use a `sops.template` to create a file that contains the secret stored
+in an environment variable:~~
+
+First, we are going to fix `flake.nix` so that sops-nix is an output (so it's
+available) and add the module to our nix modules (so we can use it). Oops.
+
+<!-- TODO Link to commit e8c593a -->
+
+Then we're going to do a wee bit of sops configuration:
+
+1. Set the default sops secrets file
+   <!-- TODO Link to commit 30eb5e6 -->
+2. Tell sops where the SSH keys are (it'll derive age keys from the ssh keys)
+   <!-- TODO Link to commit e002173 -->
+
+**Now** we can tell sops that "there is a secret called `rental-flat-psk`", and
+it doesn't need any special configuration (hence the empty `{}`):
+
+<!-- TODO Link to commit 1aee658 -->
+
+It'll be created at `/run/secrets/rental-flat-psk`.
+
+Then we use the `sops.templates` to embed a secret into a string that gets
+written to a file. Theoretically you could write the NetworkManager profile by
+hand and use a template to embed it into a giant template, but that's very ugly
+and means you don't get to use declarative
+`networking.networkmanager.ensureProfiles` config.
+
+<!-- TODO Link to commit 26b5976 -->
+
+It'll be created at `/run/secrets-rendered/wireless.env`
+
+Then we're going to include that environment file in our NetworkManager
+configuration by evaluating the `path` attribute on the `template`:
+
+<!-- TODO Link to commit 8cb3640 -->
+
+That'll add `EnvironmentFile=/run/secrets-rendered/wireless.env` to
+`/etc/systemd/system/NetworkManager-ensure-profiles.service`
+
+And finally after all that setup we can add the *actual* psk to the network
+configuration:
+
+<!-- TODO Link to commit 9b366f9 -->
+
+There's ~~one~~ two other things I need to do here before this'll work.
+
+The first is to actually _include_ the `wireless.nix` file in the configuration.
+I wrote these notes as a "configure everything first and then do a big test as
+the last step" which is completely stupid. What I **should** have done is
+include a blank `wireless.nix` file in the configuration right at the beginning
+and then make small changes and test each one to make sure everything still
+worked. I'll do that going forward.
+
+<!-- TODO Link to commit b3bdcdf -->
+
+The second thing I need to do is apologise for doing the first thing. I'm going
+to test it, but if you do commit b3bdcdf as the very first thing in this post,
+you can `nixos-rebuild` at every stage and it will complete successfully.
+
+Right. Apply the changes.
+
+```bash
+sudo nixos-rebuild switch --flake .
+```
+
+Oh! Funny story.
+This has taken me a few ~~hours~~ ~~days~~ ~~weeks~~ to write, and I've
+**moved** flat since I started. So I need to update the SSID of our wireless and
+the PSK.
+
+Change the SSID:
+<!-- TODO Link to commit 7a5858c -->
+
+Change the PSK using:
+
+```bash
+nix-shell --packages sops --run "sops secrets.yaml"
+```
+
+<!-- TODO Link to commit ab1871e -->
+
+While I'm here, that ID isn't tied to a specific SSID, so I'm going to change
+it:
+
+<!-- TODO Link to commit 7dca969 -->
+
+The ID is what shows up in the network scan list (say if you use `nmtui`).
+
+Now for my moment of truth.
+
+```bash
+sudo nixos-rebuild switch --flake .
+```
+
+Then I'm going to manually delete any and all connections that I created
+manually (run `sudo ls /etc/NetworkManager/system-connections` to get a list)
+
+```bash
+# Delete any manually configured connections
+sudo nmcli connection delete DIGIFIBRA-PLUS-YkPe
+sudo nmcli connection delete <ANY OTHERS I CAN SEE>
+
+# Restart NetworkManager
+sudo systemctl restart NetworkManager
+
+# Check I still have a network connection
+ping duckduckgo.com
+```
+
+<!-- TODO Insert celebration gif -->
+
+Right, that was a lot of work, but it's now going to be easy to add new network
+connections.
+
+Like my phone hotspot:
+
+<!-- TODO Link to commit ece66ac -->
+
+And the coworking space I'm at just now. I'm going to keep the SSID as a secret
+as well because the SSID is a bit "google-able" and I'd rather preserve some
+illusion of privacy.
+
+<!-- TODO Link to commit e775d36 -->
 
 ---
 
