@@ -49,7 +49,7 @@ git config user.name "stoo johnston"
 git config user.email "scj@stooj.org"
 ```
 
-- [ ] Disk partitioning and formatting (needs flakes ✓)
+- [x] Disk partitioning and formatting (needs flakes ✓)
 - [ ] Root user password (needs secrets ✗)
 - [ ] Wireless network connection details for `rentalflat` (needs secrets ✗)
 - [ ] Passwords for `pindy` and `stooj` (needs secrets ✗)
@@ -147,7 +147,7 @@ Nice!
 Now to put the public key into our local keystore. We should add that to the
 list:
 
-- [ ] Disk partitioning and formatting (needs flakes ✓)
+- [x] Disk partitioning and formatting (needs flakes ✓)
 - [ ] Root user password (needs secrets ✗)
 - [ ] Wireless network connection details for `rentalflat` (needs secrets ✗)
 - [ ] Passwords for `pindy` and `stooj` (needs secrets ✗)
@@ -499,11 +499,7 @@ illusion of privacy.
 
 <!-- TODO Link to commit e775d36 -->
 
----
-
-<!-- TODO This should be recorded somewhere -->
-
-The other thing I'm going to do is **record** the root SSH keys for drummer in
+The last thing I'm going to do is **record** the root SSH keys for drummer in
 my password store, so we can use _the same keys_ when we rebuild the machine.
 
 I don't _have_ pass installed or configured on drummer yet, which is probably an
@@ -537,26 +533,30 @@ This is a silly command, but it works.
 Simple.
 
 We need to do the same for the public key. Actually, we don't need to at all,
-but I'm going to in case.
+but I'm going to in case. Actually, why would I bother? If you can have the private key, you can generate
+a public key. Ignore this paragraph.
 
-Actually, why would I bother? If you can have the private key, you can generate
-a public key.
+And that's _finally_ secrets ready to roll. System-wide secrets at least. Where were those lists?
 
-<!-- END TODO  -->
+- [x] Switch to flakes
+- [ ] User configuration files
+- [x] Secrets
+- [ ] More system packages (like a working desktop)
+- [ ] User secrets
 
-<!-- TODO DO I NEED TO DO THIS? -->
+And some manual config we can tick off:
 
-We also need to add the public key as a file in the repo, and it's going to be
-an age file.
+- [x] Disk partitioning and formatting (needs flakes ✓)
+- [ ] Root user password (needs secrets ✗)
+- [x] Wireless network connection details for `rentalflat` (needs secrets ✗)
+- [ ] Passwords for `pindy` and `stooj` (needs secrets ✗)
+- [ ] SSH known hosts file maybe. (needs user configuration ✗)
+- [ ] `/home/stooj/code/nix/` directory (needs user configuration ✗)
+- [ ] `/home/stooj/code/nix/nix-config` cloned from GitHab or whatever (needs
+      user configuration ✗)
+- [ ] Git user configuration (needs user configuration ✗)
+- [ ] GPG pubring
 
-```bash
-mkdir --parents ~/code/unmanaged/nix-config/keys/hosts
-nix-shell --packages ssh-to-age --run \
-  'cat /etc/ssh/ssh_host_ed25519_key.pub \
-  | ssh-to-age -o ~/code/unmanaged/nix-config/keys/hosts/drummer.age'
-```
-
-<!-- END TODO  -->
 
 [^1]: [feature request: support for external key management · Issue #629 · Mic92/sops-nix](https://github.com/Mic92/sops-nix/issues/629)
 
@@ -573,3 +573,4 @@ nix-shell --packages ssh-to-age --run \
 - [linux - How do I run a sudo command on a remote machine using ssh? - Super User](https://superuser.com/questions/1613852/how-do-i-run-a-sudo-command-on-a-remote-machine-using-ssh)
 - [linux - How to provide password directly to the sudo su -<someuser> in shell scripting - Super User](https://superuser.com/questions/1351872/how-to-provide-password-directly-to-the-sudo-su-someuser-in-shell-scripting/1351876#1351876)
 - [My New Network (and encrypting secrets with sops) - sam@samleathers.com ~ $](https://samleathers.com/posts/2022-02-11-my-new-network-and-sops.html)
+- [networkmanager - How to delete connection by name via Network Manager - Unix & Linux Stack Exchange](https://unix.stackexchange.com/questions/277555/how-to-delete-connection-by-name-via-network-manager)
