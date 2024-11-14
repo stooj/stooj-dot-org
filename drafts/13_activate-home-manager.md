@@ -11,6 +11,7 @@ At the end of the OS installation, we had two TODO lists to check:
 - [x] Secrets
 - [ ] More system packages (like a working desktop)
 - [ ] User secrets
+- [ ] Full disk encryption
 
 We also had a list of things to add to the configuration:
 
@@ -91,9 +92,7 @@ Woah. That was easy. And the options are [many and varied](https://nix-community
 - [ ] More system packages (like a working desktop)
 - [ ] User secrets
 
-Time to try this out with something interesting.
-
-<!-- TODO Maybe email? -->
+Time to tick off some more things.
 
 # References
 
