@@ -13,6 +13,10 @@ safe to use it as my NixOS testbed for launching my grand scheme.
 
 Smeg. Uhm, uhm. Time to try KDE Neon!
 
+I've done a standard installation that I'm not going to document here because it's boring, but there **are** some things that I need configured.
+
+<!-- TODO Document setting up password store and yubikey -->
+
 # References
 
 - [KDE neon](https://neon.kde.org/)
