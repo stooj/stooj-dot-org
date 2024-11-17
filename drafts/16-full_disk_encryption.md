@@ -334,6 +334,15 @@ echo $temp  # Check it's still set to something
 rm -rf $temp  # TODO is there a better way of only deleting this if it's set?
 ```
 
+And merge my branch (I'm still on `drummer`):
+
+```bash
+cd ~/code/nix/nix-config
+git checkout main
+git merge origin/full-disk-encryption
+git push
+```
+
 ## References
 
 - [How to use `sops-nix` when first partitioning disk with `disko`? · Issue #641 · nix-community/disko](https://github.com/nix-community/disko/issues/641)
