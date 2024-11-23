@@ -8,11 +8,6 @@ There are two million, three hundred and sixty eight different screenshot utilit
 
 I'm going to use [Flameshot](https://flameshot.org/) because it's already [configurable with home-manager](https://nix-community.github.io/home-manager/options.xhtml#opt-services.flameshot.enable), it lets you pick a directory to save things to by default, and you get to draw arrows over your captures before you save them.
 
-```bash
-cd ~/code/nix/nix-config
-git checkout -b flameshot
-```
-
 First off, enable the service.
 
 <!-- TODO Link to commit 1568b87 -->
@@ -140,6 +135,31 @@ Three keybindings:
 2. Meta key and Print Screen lets me drag a box over the thing I want to capture
 3. Meta key and Shift and Print Screen has a wee script which waits 5 seconds and then lets me drag a box over the thing I want to capture. It also sends a notification count-down every second. I use this **all the time**.
 
+<!-- TODO Add image capture of flameshot countdown -->
+
+Huh, I need notify-send to be installed though, which is in the `libnotify` package (according to the [Arch wiki](https://wiki.archlinux.org/title/Desktop_notifications#Bash) which is probably not a great source but it's pretty great documentation.).
+
+<!-- TODO Link to commit b4565bc -->
+
+This is pretty ugly though; the top-level `environment.systemPackages` feels like a terrible place to declare a *dependency* of a user-written helper utility for a user-scoped (home-manager managed) package.
+
+I should find a more meaningful place to add that dependency. I'll bet there's a better way.
+
+That's it for now though. Screen captures or even screenshots are a thing now.
+
+The only thing left to add is a browser and then I can permanently stop using `proteus` for taking my notes, and start using `drummer` for everything.
+
+Whoops. Just realised that I committed all these changes to the `main` branch. It's late at night and I'm tired and I can't be bothered replaying all those commits in a new branch so stuffit, it's going to main. I did merge the i3wm branch though, right?
+
+I also somehow managed to commit this file and not save the last 6 paragraphs, but vim undo to the rescue 😍
+
+`:w`
+
+`:w`
+
+Goodnight.
+
+`:wq`
 
 # References
 
@@ -147,3 +167,4 @@ Three keybindings:
 - [services.flameshot](https://nix-community.github.io/home-manager/options.xhtml#opt-services.flameshot.enable)
 - [Unit tray.target not found · Issue #2064 · nix-community/home-manager](https://github.com/nix-community/home-manager/issues/2064)
 - [flameshot.example.ini](https://github.com/flameshot-org/flameshot/blob/729f494d535356adfbd65dc127a5c82ea218006e/flameshot.example.ini)
+- [Desktop notifications - ArchWiki](https://wiki.archlinux.org/title/Desktop_notifications#Bash)
