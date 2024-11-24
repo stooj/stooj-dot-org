@@ -149,7 +149,7 @@ That's it for now though. Screen captures or even screenshots are a thing now.
 
 The only thing left to add is a browser and then I can permanently stop using `proteus` for taking my notes, and start using `drummer` for everything.
 
-Whoops. Just realised that I committed all these changes to the `main` branch. It's late at night and I'm tired and I can't be bothered replaying all those commits in a new branch so stuffit, it's going to main. I did merge the i3wm branch though, right?
+Whoops. Just realised that I committed all these changes to the `main` branch. It's late at night and I'm tired and I can't be bothered replaying all those commits in a new branch so stuffit, it's going to main. I did merge the i3wm branch though, right? (EDIT: apparently I did commit to the branch)
 
 I also somehow managed to commit this file and not save the last 6 paragraphs, but vim undo to the rescue 😍
 
