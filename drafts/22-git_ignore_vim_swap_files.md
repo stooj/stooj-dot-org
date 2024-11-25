@@ -8,6 +8,11 @@ I mean, they are great! I prefer if they lived somewhere else, and I find an und
 
 While I'm here, I may as well split git out into it's own module as well. I'll do that first.
 
+```bash
+cd ~/code/nix/nix-config
+git checkout -b git-ignore-vim-swap-files
+git push
+```
 Hmm.
 
 The git config is very _definitely_ stooj related though, so calling it `git.nix` in the root of the configuration directory is just going to clash when we do pindy's configuration. So I'll make a `common` directory for home config that we share, and `stooj` and `pindy` directories for individual settings.
@@ -36,7 +41,7 @@ With all that out of the way, it's time to finally fix the git ignore file.
 
 <!-- TODO Link to commit 2b129e4 -->
 
-Easy. Now it's set for both pindy and stooj.
+Easy. Now it's set for both pindy and stooj. And nix merges all these separate `program.git` blocks into a single configuration; it's brilliant.
 
 ```bash
 git checkout main
