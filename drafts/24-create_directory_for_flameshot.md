@@ -128,7 +128,7 @@ Woohoo!
 
 # References
 
-- [home.activation](https://nix-community.github.io/home-manager/options.xhtml)
+- [home.activation](https://nix-community.github.io/home-manager/options.xhtml#opt-home.activation)
 - [How to use home.activation to run arbitrary commands? - Help - NixOS Discourse](https://discourse.nixos.org/t/how-to-use-home-activation-to-run-arbitrary-commands/46749)
 - [Create a list of directories via Home Manager - Help - NixOS Discourse](https://discourse.nixos.org/t/create-a-list-of-directories-via-home-manager/41255)
 - [Nixos-rebuild - NixOS Wiki](https://nixos.wiki/wiki/Nixos-rebuild)
