@@ -4,6 +4,11 @@ Category: NixOS
 
 I've been looking through the nix options and nixpkgs and I've realised I'm not running the latest release any more! 24.11 happened! It's time to `dist-upgrade`. Ooof, this is probably going to take ages.
 
+```bash
+cd ~/code/nix/nix-config
+git checkout -b upgrade-to-24.11
+```
+
 <!-- TODO Link to commit  01ef242 -->
 
 That's it?? That's all I need to do??
