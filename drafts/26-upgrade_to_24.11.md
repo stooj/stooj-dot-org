@@ -46,3 +46,7 @@ git checkout main
 git merge upgrade-to-24.11
 git branch -d upgrade-to-24.11
 ```
+
+# Resources
+
+- [Appendix B. Release Notes (24.11)](https://nixos.org/manual/nixos/stable/release-notes#sec-release-24.11)
