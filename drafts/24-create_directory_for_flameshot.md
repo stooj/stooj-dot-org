@@ -104,7 +104,9 @@ That still doesn't work, and now if I revert to the previous (working) one it do
 
 My hunch is that the command only runs when *activating* a generation, and if the configuration isn't changing (I'm changing between A and B, but they were generated a few commits ago now) nix is just switching between them, not _activating_ them? It's a hunch.
 
-Wait. It's back. What did I do? I have a `/home/stooj/pictures/screenshots` directory. I'm going to say that my "hunch" was correct and move on, maybe that'll bite me somewhere down the road.
+Wait. It's back. What did I do? I have a `/home/stooj/pictures/screenshots` directory. Hmm...
+
+I'm going to say that my "hunch" was correct and move on with my life. Maybe that'll bite me somewhere down the road, but that's a future-stoo problem.
 
 ```bash
 cd ~/code/nix/nix-config
