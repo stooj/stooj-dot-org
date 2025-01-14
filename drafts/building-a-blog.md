@@ -203,7 +203,7 @@ First of all, initialize poetry in the directory:
 poetry init
 ```
 
-See? Time for a <dev>definition</dev> description list! This is the perfect
+See? Time for a <del>definition</del> description list! This is the perfect
 opportunity. I hope this works on whatever parser Pelican is going to use...
 
 **\*Note:** If anything is in italics, then I used the default option.\*
