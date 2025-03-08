@@ -6,6 +6,11 @@ I haven't integrated one of my favourite programs into i3 yet: [carnager/rofi-pa
 
 I'm going to be mucking about with my i3 configuration a little, so this is a good opportunity to tidy it up. I'm going to make a directory/module that contains all the i3 stuff and has a single entry point, because my dunst configuration doesn't make much sense to use unless I'm also using i3.
 
+```bash
+cd ~/code/nix/nix-config
+git checkout -b rofi-pass
+```
+
 <!-- TODO Link to commit dbbec61 -->
 
 And I can move rofi into a separate file too, and add rofi-pass while I'm at it.
