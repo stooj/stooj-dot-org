@@ -22,5 +22,4 @@ I didn't bother with a branch for this, oops. But I'll be doing it a lot.
 
 # Reference
 
-- [NixOS 24.11 released | Blog | Nix & NixOS](https://nixos.org/blog/announcements/2024/nixos-2405/)
-- [NixOS 24.05 released | Blog | Nix & NixOS](https://nixos.org/blog/announcements/2024/nixos-2411/)
+- [Updating the System | NixOS & Flakes Book](https://nixos-and-flakes.thiscute.world/nixos-with-flakes/update-the-system)
