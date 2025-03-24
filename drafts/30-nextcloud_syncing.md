@@ -1,5 +1,5 @@
 Title: Nextcloud syncing
-Date: 2025-03-30T23:11:50
+Date: 2025-03-20T23:11:50
 Category: NixOS
 
 Did I mention that I got a nextcloud account with Hetzner! They sell a [managed Nextcloud service](https://www.hetzner.com/storage/storage-share/) for not very manys, and Nextcloud is high on the list of things I don't want to manage myself (right now).
