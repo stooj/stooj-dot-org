@@ -41,6 +41,10 @@ Oh, it was worth it though. Kitty is beautiful.
 
 TODO: Tidy up qutebrowser
 
+Things I want from kitty:
+- yankable urls
+- scrollback
+
 # References
 - [kitty](https://sw.kovidgoyal.net/kitty/index.html)
 - [kitty - ArchWiki](https://wiki.archlinux.org/title/Kitty)
