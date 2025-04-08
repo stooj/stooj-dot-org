@@ -39,12 +39,64 @@ Oh, it was worth it though. Kitty is beautiful.
 
 <!-- TODO insert 32-kitty_terminal.png -->
 
+One thing I really want from kitty that alacritty can do out of the box is opening URLs in the default browser. According to the [Hints](https://sw.kovidgoyal.net/kitty/kittens/hints/) page it does this with `Ctrl+Shift+e`. 
+
+<!-- TODO insert 32-kitty_url_hints.png -->
+
+Woah, that works really well. See the green numbers?
+
+The other default hints are documented [here](https://sw.kovidgoyal.net/kitty/conf/#shortcut-kitty.Open-URL).
+
+The other thing that kitty can do apparently is opening the scrollback buffer in vim according to [this reddit post](https://www.reddit.com/r/KittyTerminal/comments/t5skn8/comment/hza18au/).
+
+<!-- TODO Link to commit e5ac2d4 -->
+
+You open the scrollback buffer using `Ctrl+Shift+h`.
+
+Ugh, it looks rubbish though.
+
+<!-- TODO insert 32-kitty_url_hints.png -->
+
+It's because vim doesn't understand those ansi code sequences. There's a [vim plugin though](https://github.com/powerman/vim-plugin-AnsiEsc) that will apparently fix it.
+
+Time to install a vim plugin. The first of many probably.
+
+Wait, time to get the vim configuration out of the top-level `configuration.nix` file.
+
+<!-- TODO Link to commit e336a98 -->
+
+Uhm, it's not packaged though, so I'm going to need to build it. The instructions are on the [vim wiki page](https://nixos.wiki/wiki/Vim).
+
+First, `programs.vim` doesn't support plugins. So I need to switch to the more generic management (install this package and override it), and add an environment variable that does the same as `defaultEditor = true;`. This customization needs `vimrcConfig.customRC` as well, so I've put in a `set number` option to check that it's working correctly.
+
+It is.
+
+I'm going to need some more stuff in `vimrcConfig`, so here's a commit that rearranges that to minimize the diffs:
+
+<!-- TODO Link to commit 3f5707b -->
+
+That commit doesn't _change_ anything, it's just cosmetic. Here's the real change; building the plugin:
+
+NOTE: the hash is the latest commit hash [according to GitHub](https://github.com/powerman/vim-plugin-AnsiEsc/commits/master/). I don't know of a good way of calculating the sha256 sum other than putting a nonsense value in first, trying to build it, and then correcting it based on the error message: e.g.:
+
+```
+error: hash mismatch in fixed-output derivation '/nix/store/x0pxbj9sy48mrc6vv5cfxphypiwyazv8-source.drv':
+         specified: sha256-cy3R/cHrY0o1oDEnxzhoL4L2Tncfmh6ANX9H1ZEKgII=
+            got:    sha256-N7UVzk/XUX76XcPHds+lLMZzO7gahj/9LIfof2BPThc=
+```
+
+
+<!-- TODO Link to commit d61667f -->
+
+There's a lot to explain here, so I'm going to go to bed and do it tomorrow.
+
+Also, the kitty thing doesn't work because pkgs.vim in home-manager isn't pointing to the same package.
+
+Here's where I set the `scrollback_pager` to be read-only.
+
+<!-- TODO Link to commit 40dbafd -->
+
 TODO: Tidy up qutebrowser
-
-Things I want from kitty:
-- yankable urls
-- scrollback
-
 # References
 - [kitty](https://sw.kovidgoyal.net/kitty/index.html)
 - [kitty - ArchWiki](https://wiki.archlinux.org/title/Kitty)
@@ -55,3 +107,7 @@ Things I want from kitty:
 - [Overview | Terminator Terminal Emulator](https://gnome-terminator.org/)
 - [Home Manager - Options - systemd.user.sessionVariables](https://nix-community.github.io/home-manager/options.xhtml#opt-systemd.user.sessionVariables)
 - [Home Manager - Options - home.sessionVariables](https://nix-community.github.io/home-manager/options.xhtml#opt-home.sessionVariables)
+- [Hints - kitty](https://sw.kovidgoyal.net/kitty/kittens/hints/)
+- [Overview - The scrollback buffer - kitty](https://sw.kovidgoyal.net/kitty/overview/#the-scrollback-buffer)
+- [powerman/vim-plugin-AnsiEsc: ansi escape sequences concealed, but highlighted as specified (conceal)](https://github.com/powerman/vim-plugin-AnsiEsc)
+- [Vim - NixOS Wiki](https://nixos.wiki/wiki/Vim)
