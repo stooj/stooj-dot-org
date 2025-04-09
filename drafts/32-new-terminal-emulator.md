@@ -77,6 +77,18 @@ I'm going to need some more stuff in `vimrcConfig`, so here's a commit that rear
 
 That commit doesn't _change_ anything, it's just cosmetic. Here's the real change; building the plugin:
 
+<!-- TODO Link to commit d61667f -->
+
+There's a lot to explain here, so I'm going to go to bed and do it tomorrow.
+
+Good morning!
+
+OK, at the top of this change is a [let expression](https://nixos.org/guides/nix-pills/04-basics-of-language#let-expressions), which _lets_ you (:grin:) define variables that can be referenced inside the body of a nix expression. Those variables will only be available in the scope of the `in` bit.
+
+I'm declaring a variable called `vim-ansi-esc` which contains the build derivation of the `vim-plugin-AnsiEsc` vim plugin. `buildVimPlugin` clones a repo from GitHub, builds it like a normal vim plugin and then it's referenced in the `vim-ansi-esc` variable.
+
+Then I include that plugin as part of the `vim_configurable` customization; the `start` bit is "put this in vim's `pack/*/start` configuration so it can be found by vim.
+
 NOTE: the hash is the latest commit hash [according to GitHub](https://github.com/powerman/vim-plugin-AnsiEsc/commits/master/). I don't know of a good way of calculating the sha256 sum other than putting a nonsense value in first, trying to build it, and then correcting it based on the error message: e.g.:
 
 ```
@@ -85,16 +97,38 @@ error: hash mismatch in fixed-output derivation '/nix/store/x0pxbj9sy48mrc6vv5cf
             got:    sha256-N7UVzk/XUX76XcPHds+lLMZzO7gahj/9LIfof2BPThc=
 ```
 
+Hey! After a `nix-rebuild` the plugin is there! Neat! Very exciting.
 
-<!-- TODO Link to commit d61667f -->
-
-There's a lot to explain here, so I'm going to go to bed and do it tomorrow.
-
-Also, the kitty thing doesn't work because pkgs.vim in home-manager isn't pointing to the same package.
-
-Here's where I set the `scrollback_pager` to be read-only.
+I probably want the scrollback buffer to be read-only as well by default:
 
 <!-- TODO Link to commit 40dbafd -->
+
+AnsiEsc still doesn't work for the kitty scrollback though, because it's `pkgs.vim` is not the same as the systemPackages `pkgs.vim_configurable`. How about this?
+
+<!-- TODO Link to commit b70bde7 -->
+
+No, still not correct. Let's see:
+
+```bash
+echo -n "Vim with AnsiESC is here: " && \
+    readlink $(which vim)
+```
+
+```
+Vim with AnsiESC is here: /nix/store/0fikza1prd3gfh50ypchwd32gi3zhllg-vim/bin/vim
+```
+
+```bash
+echo -n "Kitty is using vim from: " && \
+    cat ~/.config/kitty/kitty.conf | grep scrollback_pager | cut -f2 -d' '
+```
+
+```
+Kitty is using vim from: /nix/store/72z2dbd9rvzqjikh88hszc1mmxpx8wyx-vim-full-9.1.1046/bin/vim
+```
+
+Those are **not** the same.
+Also, the kitty thing doesn't work because pkgs.vim in home-manager isn't pointing to the same package. It's using the `vim` package
 
 TODO: Tidy up qutebrowser
 # References
@@ -111,3 +145,6 @@ TODO: Tidy up qutebrowser
 - [Overview - The scrollback buffer - kitty](https://sw.kovidgoyal.net/kitty/overview/#the-scrollback-buffer)
 - [powerman/vim-plugin-AnsiEsc: ansi escape sequences concealed, but highlighted as specified (conceal)](https://github.com/powerman/vim-plugin-AnsiEsc)
 - [Vim - NixOS Wiki](https://nixos.wiki/wiki/Vim)
+- [The Basics of the Language - Let expressions - Nix Pills](https://nixos.org/guides/nix-pills/04-basics-of-language#let-expressions)
+- [Nixpkgs Overriding Packages - Nix Pills](https://nixos.org/guides/nix-pills/17-nixpkgs-overriding-packages.html)
+- [plugin system - how to load vim8 optional packages in vimrc? - Vi and Vim Stack Exchange](https://vi.stackexchange.com/questions/20810/how-to-load-vim8-optional-packages-in-vimrc/20818#20818)
