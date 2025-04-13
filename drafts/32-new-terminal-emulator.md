@@ -45,7 +45,7 @@ One thing I really want from kitty that alacritty can do out of the box is openi
 
 Woah, that works really well. See the green numbers?
 
-The other default hints are documented [here](https://sw.kovidgoyal.net/kitty/conf/#shortcut-kitty.Open-URL).
+The other default hints are documented [here](https://sw.kovidgoyal.net/kitty/conf/#shortcut-kitty.Open-URL). The `>h` bit in the `ctrl+shift+p>h` is "Press control and shift and p, let go, then press h on it's own". It's like tmux's prompt.
 
 The other thing that kitty can do apparently is opening the scrollback buffer in vim according to [this reddit post](https://www.reddit.com/r/KittyTerminal/comments/t5skn8/comment/hza18au/).
 
@@ -65,7 +65,7 @@ Wait, time to get the vim configuration out of the top-level `configuration.nix`
 
 <!-- TODO Link to commit e336a98 -->
 
-Uhm, it's not packaged though, so I'm going to need to build it. The instructions are on the [vim wiki page](https://nixos.wiki/wiki/Vim).
+Uhm, the plugin I want is not packaged though, so I'm going to need to build it. The instructions are on the [vim wiki page](https://nixos.wiki/wiki/Vim).
 
 First, `programs.vim` doesn't support plugins. So I need to switch to the more generic management (install this package and override it), and add an environment variable that does the same as `defaultEditor = true;`. This customization needs `vimrcConfig.customRC` as well, so I've put in a `set number` option to check that it's working correctly.
 
@@ -128,9 +128,123 @@ Kitty is using vim from: /nix/store/72z2dbd9rvzqjikh88hszc1mmxpx8wyx-vim-full-9.
 ```
 
 Those are **not** the same.
-Also, the kitty thing doesn't work because pkgs.vim in home-manager isn't pointing to the same package. It's using the `vim` package
 
-TODO: Tidy up qutebrowser
+I guess I can just _cheat_ and rely on `$PATH` rather than the fully-qualified path for vim:
+
+<!-- TODO Link to commit 10991fa -->
+
+Hey! That works :grin:. AnsiEsc isn't enabled by default though. Should be easy to fix:
+
+<!-- TODO Link to commit a702d70 -->
+
+It's _almost_ right, but there are still escape sequences showing. What **are** they?  :thinking:
+
+<!-- TODO insert 32-kitty_ansi_sequences.png -->
+
+"Incompatible sequences". Hmm. 
+
+This might have to wait until I switch to neovim (it's coming very soon). Once I do that I can use [mikesmithgh/kitty-scrollback.nvim: 😽 Open your Kitty scrollback buffer with Neovim. Ameowzing!](https://github.com/mikesmithgh/kitty-scrollback.nvim?tab=readme-ov-file).
+
+None of this helps pindy though. Why did I put the kitty configuration in `common`?
+
+<!-- TODO Link to commit a43e15f -->
+
+That's better. Last thing, I think this vim thing isn't going to work just now. Time to revert. I mean rebase:
+
+```bash
+git rebase e336a98
+```
+
+Wait, that's not right. I do have a _couple_ of commits that I want to keep, and if I rebase then I won't be able to see the old commits in this blog.
+
+<!-- TODO Insert UNDO gif -->
+
+So use the reflog (which is amazing) to find the commit before the rebase and reset to that commit (hard because I don't want unstaged changes to be preserved).
+
+```bash
+git reflog
+git reset --hard a43e15f
+```
+
+Git rebase is the _sensible_ thing to do in most realities, but I want to preserve all the commit history so that my notes above have commits to point to.
+
+So I'm going to unpick the vim configuration manually by reverting individual commits.
+
+An easy one first, don't use `AnsiEsc` for the pager:
+
+```bash
+git revert a702d70
+```
+
+<!-- TODO Link to commit 5b69d18 -->
+
+Wow, those kitty hints (`ctrl+shift+p>h` for (git) hashes) are cool but I really want to yank things into the clipboard rather than just inserting them into the same terminal window. That's a problem for later.
+
+I think I'd need to undo these commits one-by one, so rather than reverting them I'm just going to blaze a new trail and tidy them up more directly.
+
+<!-- TODO Link to commit 2c6506c -->
+
+And replace the custom vim derivation with a standard nixos option again:
+
+<!-- TODO Link to commit 7d697b9 -->
+
+Phew! All that way to get nowhere. But we have kitty now and it's _still_ beautiful.
+
+Pindy couldn't give a stuff about kitty though. I wonder if she'd be happy with [konsole](https://wiki.archlinux.org/title/Konsole) instead?
+
+Install konsole for pindy first:
+
+<!-- TODO Link to commit 1ea4792 -->
+
+And set it as their preferred terminal:
+
+<!-- TODO Link to commit 91c6c7f -->
+
+At the end of each of these I give a dramatic exhale, but it's getting easier every time. There's always a lot more to do, and pindy **hates** vim so it can't _be_ the default editor for everyone, but that's another problem for another day.
+
+Ooh, I wonder if I can fix those kitty hints. I'm using the default x11 clipboard at the moment (which is a bit of a footer) but hopefully kitty can use that.
+
+<!-- TODO Link to commit 1e54887 -->
+
+Oooh, that is _so_ cool. URLS now please! 
+
+The default url function doesn't use the same "kitten" though, it uses an [inbuilt function called `open_url_with_hints`](https://sw.kovidgoyal.net/kitty/conf/#shortcut-kitty.Open-URL).
+
+I wonder...
+
+<!-- TODO Link to commit 1d09e33 -->
+
+Outstanding.
+
+<!-- TODO insert 32-kitty_url_pasted_hint.png -->
+
+I also want to grab filenames rather that just _open_ them.
+
+<!-- TODO Link to commit 0cbdb11 -->
+
+Wow, these three changes make writing this documentation so much easier. I might rebind them in future to be a bit more consistent though.
+
+Last thing is kitty's [shell integration](https://sw.kovidgoyal.net/kitty/shell-integration/), which lets the terminal emulator (kitty) talk to the shell (bash/zsh).
+
+Woah, including `cloning the current shell into a new window`. That's _cool_!
+
+<!-- TODO Link to commit cb6303e -->
+
+
+However, I think I'm done messing about with kitty for now. I'm very pleased so far, this hinting thing is very cool.
+
+```bash
+git checkout main
+```
+
+This is where I realise I've been committing to `main` instead of my branch. Whoops. I need a prompt that shows me which branch I'm in :facepalm:
+
+Huh, I must have "merged" into main with all that `rebase`/`reset` nonsense earlier on. The `new-terminal-emulator` branch is safe to delete.
+
+```bash
+git branch -d new-terminal-emulator
+```
+
 # References
 - [kitty](https://sw.kovidgoyal.net/kitty/index.html)
 - [kitty - ArchWiki](https://wiki.archlinux.org/title/Kitty)
@@ -148,3 +262,9 @@ TODO: Tidy up qutebrowser
 - [The Basics of the Language - Let expressions - Nix Pills](https://nixos.org/guides/nix-pills/04-basics-of-language#let-expressions)
 - [Nixpkgs Overriding Packages - Nix Pills](https://nixos.org/guides/nix-pills/17-nixpkgs-overriding-packages.html)
 - [plugin system - how to load vim8 optional packages in vimrc? - Vi and Vim Stack Exchange](https://vi.stackexchange.com/questions/20810/how-to-load-vim8-optional-packages-in-vimrc/20818#20818)
+- [terminal - List of ANSI color escape sequences - Stack Overflow](https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences)
+- [[Question] How to use neovim (or vim) as scrollback pager? · Issue #2327 · kovidgoyal/kitty](https://github.com/kovidgoyal/kitty/issues/2327)
+- [Feature Request: Ability to select text with the keyboard (vim-like) · Issue #719 · kovidgoyal/kitty](https://github.com/kovidgoyal/kitty/issues/719#issuecomment-952039731)
+- [mikesmithgh/kitty-scrollback.nvim: 😽 Open your Kitty scrollback buffer with Neovim. Ameowzing!](https://github.com/mikesmithgh/kitty-scrollback.nvim?tab=readme-ov-file)
+- [Konsole - ArchWiki](https://wiki.archlinux.org/title/Konsole)
+- [Shell integration - kitty](https://sw.kovidgoyal.net/kitty/shell-integration/)
