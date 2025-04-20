@@ -17,7 +17,6 @@ I can have bad jokes though.
 - Matrix?
 - Git forge
 
-
 ### Vim post TODO
 
 - whichkey ✓
