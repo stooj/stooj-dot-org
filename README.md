@@ -10,6 +10,7 @@ I can have bad jokes though.
 ## Posts to write
 
 - Fix mouse focus for i3. I don't know what I'm doing but somehow I switch window focus sometimes.
+- stoo wiki
 - Configure git to `push.autoSetupRemote`
 - Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
 - Screen locking
