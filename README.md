@@ -13,6 +13,9 @@ I can have bad jokes though.
 - Configure git to `push.autoSetupRemote`
 - Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
 - Screen locking
+- Weechat
+- Matrix?
+- Git forge
 
 
 ### Vim post TODO
