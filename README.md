@@ -12,7 +12,17 @@ I can have bad jokes though.
 - Fix mouse focus for i3. I don't know what I'm doing but somehow I switch window focus sometimes.
 - Configure git to `push.autoSetupRemote`
 - Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
+- Screen locking
 
+
+### Vim post TODO
+
+- whichkey ✓
+- fuzzy finding
+- git plugins
+- surround
+- matching brackets
+- rainbow brackets
 
 ## Flameshot capture settings
 
@@ -20,3 +30,4 @@ I can have bad jokes though.
 - H: 524
 - x: 958
 - y: 27
+
