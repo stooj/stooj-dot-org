@@ -143,14 +143,54 @@ Here's how you install a plugin with nixvim. How fecking cool and easy is that?
 
 <!-- TODO Link to commit e9cc911 -->
 
-TODO: Take a screenshot of `which-key` (try just a `g` command)
+Right, so which-key will now pop-up at the bottom if I press the first character of some command, showing me a list of all the things I _could_ press next and what they'll do.
 
-- whichkey ✓
-- fuzzy finding
-- git plugins
-- surround
-- matching brackets
-- rainbow brackets
+<!-- TODO Insert image 34-which_key_after_g_key_pressed.png -->
+
+Next is finding a way of opening files. A lot of people have a tree viewer plugin for this (actually, maybe that's a good idea for discovering the layout of a project) but I prefer opening files directly with fuzzy matching.
+
+There's a plugin called Telescope which provides a generic "pick things from a list" interface that's lovely to use.
+
+This is going to be a utility again - I'm somewhat worried that everything will end up in the `utils` directory.
+
+This'll need some more configuration, but install the plugin first.
+
+<!-- TODO Link to commit dd3608f -->
+
+Hmm, that printed out a warning when I built it.
+```
+evaluation warning: Nixvim: `plugins.web-devicons` was enabled automatically because the following plugins are enabled.
+  This behaviour is deprecated. Please explicitly define `plugins.web-devicons.enable` or alternatively
+  enable `plugins.mini.enable` with `plugins.mini.modules.icons` and `plugins.mini.mockDevIcons`.
+  plugins.telescope
+```
+
+What's [mini](https://github.com/echasnovski/mini.nvim)?
+
+Hmm, looks handy for later 🤔. Wow, that's a lot of things though.
+
+I definitely _want_ devicons, but I don't have a font that supports them yet. I'd meant to do this another day, but I guess we're doing it now. Time to install [nerd fonts](https://www.nerdfonts.com/).
+
+Nerd fonts are a collection of the fonts you probably wanted to use anyway, but with a veritable **mountain** of extra glyphs that mean you get fancy icons in your terminal.
+
+For example, `\uf313` looks like nonsense at the moment: 
+
+<!-- TODO Insert image 34-which_key_after_g_key_pressed.png -->
+
+Wait, what? That looks fine! 🤔
+
+And smileys work too!
+
+Maybe the nix icon is a special case? What happens if I try to print an _incredibly obscure_ icon?
+
+OK, so they didn't work. Weird. So let's explicitly install a font and set it as the default in kitty. But this isn't vim, so it's time for a new post.
+
+```bash
+cd ~/code/nix/nix-config
+git checkout main
+git merge vim
+```
+
 # References
 
 - [programs.neovim - Appendix A. Home Manager Configuration Options](https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable)
@@ -160,3 +200,6 @@ TODO: Take a screenshot of `which-key` (try just a `g` command)
 - [ellisonleao/gruvbox.nvim: Lua port of the most famous vim colorscheme](https://github.com/ellisonleao/gruvbox.nvim)
 - [folke/which-key.nvim: 💥 Create key bindings that stick. WhichKey helps you remember your Neovim keymaps, by showing available keybindings in a popup as you type.](https://github.com/folke/which-key.nvim)
 - [dc-tec/nixvim: My personal NixVim Configuration](https://github.com/dc-tec/nixvim/tree/main)
+- [nvim-telescope/telescope.nvim: Find, Filter, Preview, Pick. All lua, all the time.](https://github.com/nvim-telescope/telescope.nvim)
+- [echasnovski/mini.nvim: Library of 40+ independent Lua modules improving overall Neovim (version 0.8 and higher) experience with minimal effort](https://github.com/echasnovski/mini.nvim)
+- [Nerd Fonts - Iconic font aggregator, glyphs/icons collection, & fonts patcher](https://www.nerdfonts.com/#home)
