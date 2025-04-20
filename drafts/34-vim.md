@@ -175,7 +175,7 @@ Nerd fonts are a collection of the fonts you probably wanted to use anyway, but 
 
 For example, `\uf313` looks like nonsense at the moment: 
 
-<!-- TODO Insert image 34-which_key_after_g_key_pressed.png -->
+<!-- TODO Insert image 34-what_font_am_i_using.png -->
 
 Wait, what? That looks fine! 🤔
 
