@@ -17,6 +17,7 @@ I can have bad jokes though.
 - Weechat
 - Matrix?
 - Git forge
+- install tree, eza, etc
 
 ### Vim post TODO
 
@@ -26,6 +27,9 @@ I can have bad jokes though.
 - surround
 - matching brackets
 - rainbow brackets
+- snippets
+- lsp for markdown
+- lsp for nix
 
 ## Flameshot capture settings
 
