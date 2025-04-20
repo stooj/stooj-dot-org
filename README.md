@@ -11,3 +11,14 @@ I can have bad jokes though.
 
 - Fix mouse focus for i3. I don't know what I'm doing but somehow I switch window focus sometimes.
 - Configure git to `push.autoSetupRemote`
+- Screen locking
+
+### Vim post TODO
+
+- whichkey ✓
+- fuzzy finding
+- git plugins
+- surround
+- matching brackets
+- rainbow brackets
+
