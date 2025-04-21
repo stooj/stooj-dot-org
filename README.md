@@ -18,6 +18,7 @@ I can have bad jokes though.
 - Matrix?
 - Git forge
 - install tree, eza, etc
+- tmux
 
 ### Vim post TODO
 
