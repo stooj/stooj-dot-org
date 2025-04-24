@@ -24,7 +24,7 @@ I can have bad jokes though.
 ### Vim post TODO
 
 - whichkey ✓
-- fuzzy finding
+- fuzzy finding ✓
 - git plugins
 - surround
 - matching brackets
@@ -32,6 +32,9 @@ I can have bad jokes though.
 - snippets
 - lsp for markdown
 - lsp for nix
+- More vim?
+    - clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
+    - set scrolloff=999?
 
 ## Flameshot capture settings
 
