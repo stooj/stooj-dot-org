@@ -20,6 +20,7 @@ I can have bad jokes though.
 - Git forge
 - install tree, eza, etc
 - tmux
+- formatting for yaml files in config
 
 ### Vim post TODO
 
@@ -32,6 +33,7 @@ I can have bad jokes though.
 - snippets
 - lsp for markdown
 - lsp for nix
+- smiley cmp source
 - More vim?
     - clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
     - set scrolloff=999?
