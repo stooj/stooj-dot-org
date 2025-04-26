@@ -75,6 +75,9 @@ Be right back. Restarting my editor.
 
 Time to get config-ing.
 
+> !NOTE
+> I'm going to be using a bunch of other people's configs for inspiration/ideas/solutions, but the big inspiration for the layout of the code is from [dc-tec](https://github.com/dc-tec/nixvim).
+
 Line numbers first, and if you're not a vim user then an "unusual" setup straight out the gate.
 
 The current line number is shown at the bottom a {,neo}vim window by default, along with the column number as well. That's handy, but I like to have the line numbers be a bit more obvious for myself and anyone looking over my shoulder.
