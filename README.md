@@ -10,6 +10,7 @@ I can have bad jokes though.
 ## Posts to write
 
 - Fix mouse focus for i3. I don't know what I'm doing but somehow I switch window focus sometimes.
+- Disable the trackpad when I'm typing
 - Fix nextcloud sync, tmp directory doesn't exist
 - stoo wiki
 - Configure git to `push.autoSetupRemote`
