@@ -22,6 +22,7 @@ I can have bad jokes though.
 - install tree, eza, etc
 - tmux
 - formatting for yaml files in config
+- Qutebrowser vim tool
 
 ### Vim post TODO
 
