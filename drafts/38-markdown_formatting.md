@@ -202,6 +202,167 @@ I guess we're on to harper then.
 
 ### harper
 
+<!-- TODO Link to commit 5facc64 -->
+
+Hurray, that was easy and it _just works_.
+
+<!-- TODO Insert image 38-working_harper.png -->
+
+Did I mean to spell harper that way though? Yes, yes I did. Harper uses very specific [rules](https://writewithharper.com/docs/rules) for grammar checking. I don't think I make many of those mistakes, but it might be handy to catch the odd one.
+
+The spellchecking needs to go though. According [to the docs](https://writewithharper.com/docs/integrations/neovim#Common-Config-Changes) it's a simple addition to the lspconfig setup, but getting the `["harper-ls"]` in the configuration might be tricky because `harper_ls.settings` expects strings.
+
+<!-- TODO Insert image 38-broken_harper_config.png -->
+
+`"[\"harper-ls\"]"` might work? 
+
+<!-- TODO Link to commit 31bcec2 -->
+
+It _built_ fine, and the generated lua code _looks_ OK, but I'm still getting asked if I meant to spell `lua` that way.
+
+Here's the generated lua code:
+
+```lua
+-- LSP {{{
+do
+    local __lspServers = {
+        { name = "nil_ls" },
+        { name = "marksman" },
+        {
+            extraOptions = { settings = { ['["harper-ls"]'] = { linters = { SpellCheck = false } } } },
+            name = "harper_ls",
+        },
+    }
+    -- Adding lspOnAttach function to nixvim module lua table so other plugins can hook into it.
+    _M.lspOnAttach = function(client, bufnr) end
+    local __lspCapabilities = function()
+        capabilities = vim.lsp.protocol.make_client_capabilities()
+
+        capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+
+        return capabilities
+    end
+
+    local __setup = {
+        on_attach = _M.lspOnAttach,
+        capabilities = __lspCapabilities(),
+    }
+
+    for i, server in ipairs(__lspServers) do
+        if type(server) == "string" then
+            require("lspconfig")[server].setup(__setup)
+        else
+            local options = server.extraOptions
+
+            if options == nil then
+                options = __setup
+            else
+                options = vim.tbl_extend("keep", options, __setup)
+            end
+
+            require("lspconfig")[server.name].setup(options)
+        end
+    end
+end
+```
+
+Is there a way of "printing out" the end config for lspconfig? Maybe this vim command will do it?
+
+```
+:lua vim.print(require("lspconfig")["harper_ls"])
+```
+
+Nice! And lookee lookee. That does *not* look right!
+
+<!-- TODO Insert image 38-harper_config_mistake.png -->
+
+<!-- TODO Link to commit 23df7c5 -->
+
+Hmm. It's _still_ showing those spelling errors. Time to check the config again, and now that I know where it is I can print it directly:
+
+```
+:lua vim.print(require("lspconfig")["harper_ls"].manager.config.settings)
+```
+
+```
+{
+  ["harper-ls"] = {
+    linters = {
+      SpellCheck = false
+    }
+  }
+}
+```
+
+That looks _perfect_! What's going on?
+
+What happens if I just use `extraLuaConfig` directly so I can copy and paste the example config from the docs?
+
+<!-- TODO Link to commit d5b8311 -->
+
+Now my `~/.config/nvim/init.lua` contains the exact same code as the docs (apart from the SentenceCapitalization. And I **did** mean to spell SentenceCapitalization that way, thanks!
+
+```lua
+require("lspconfig").harper_ls.setup({
+    settings = {
+        ["harper-ls"] = {
+            linters = {
+                SpellCheck = false,
+            },
+        },
+    },
+})
+```
+
+What about I stop being clever and just use the exact config in the docs?
+
+<!-- TODO Link to commit c4b2b087 -->
+
+Still not working. Hmm...
+
+I searched the harper-ls issue tracker again, and I can across [this comment](https://github.com/Automattic/harper/issues/780#issuecomment-2683706024).
+
+TLDR harper < v0.23.0 uses snake_case for linter names.
+
+That took quite a while, but now it's working. Wow. Markdown lsps are a _pain_.
+
+The last thing to do is to move the configuration back into the proper nix block instead of using raw lua code:
+
+<!-- TODO Link to commit 1349309 -->
+
+## Formatting
+
+I finally made it here. The option is between [dprint](https://github.com/dprint/dprint) and [prettier](https://prettier.io/). I'm a bit done with markdown linting and formatting because it's only fecking markdown after all. I don't even like it. So this is going to be a very shallow comparison.
+
+| Formatter | Pros            |
+|-----------|-----------------|
+| dprint    | written in rust |
+| prettier  | nicer website   |
+
+dprint _has_ a prettier plugin, so I could theoretically format my files with dprint which uses prettier under the covers. Because why not.
+
+Not today though, I'm going with dprint because it's rust and I'd like more rust in my life.
+
+The weird thing is that dprint is a language server, so it'll work like a lsp. But conform supports it. So I think the way you set this up is to set up dprint like a lsp, then tell conform that "yes, I'm using dprint, and always use the lsp".
+
+dprint uses plugins for different languages, so how do I install plugins?
+
+According to [myNixOS](https://mynixos.com/nixpkgs/package/dprint-plugins.dprint-plugin-markdown) (which I've never really been sure what that is) the dprint plugins are packaged like, say, python modules. So in a standard nixos config you'd say something like:
+
+```nix
+environment.systemPackages = with pkgs; [
+  (dprint.withPlugins (plugins: with plugins; [
+    dprint-markdown
+  ]);
+];
+```
+
+But what is nixvim expecting?
+
+Try just enabling it first and see what happens.
+
+<!-- TODO Link to commit 7b036ec -->
+
 # References
 
 - [neovim/nvim-lspconfig: Quickstart configs for Nvim LSP](https://github.com/neovim/nvim-lspconfig/)
@@ -231,3 +392,6 @@ I guess we're on to harper then.
 - [nvim-neorg/neorg: Modernity meets insane extensibility. The future of organizing your life in Neovim.](https://github.com/nvim-neorg/neorg)
 - [vale_ls - nixvim docs](https://nix-community.github.io/nixvim/plugins/lsp/servers/vale_ls/index.html)
 - [.vale.ini - Vale CLI](https://vale.sh/docs/vale-ini)
+- [Neovim - Harper](https://writewithharper.com/docs/integrations/neovim)
+- [Rules - Harper](https://writewithharper.com/docs/rules)
+- [dprint-plugin-markdown - MyNixOS](https://mynixos.com/nixpkgs/package/dprint-plugins.dprint-plugin-markdown)
