@@ -363,6 +363,85 @@ Try just enabling it first and see what happens.
 
 <!-- TODO Link to commit 7b036ec -->
 
+Nope. A few issues here:
+
+1. Spelling messages for harper are back
+2. dprint packages aren't packaged for Nixos-24.11
+
+Undo the dprint commit first:
+
+```bash
+git revert 7b036ec
+```
+
+<!-- TODO Link to commit 74355a5 -->
+
+And revert moving the harper config out of lua:
+
+```bash
+git revert 1349309
+```
+
+<!-- TODO Link to commit 5155241 -->
+
+And did I not actually fix the case?
+
+<!-- TODO Link to commit e344d0c -->
+
+So prettier then? That one _isn't_ an LSP, so it'll go straight into the `conform` config. First make some room for other `plugins.nixvim` things by splitting line 5 into two lines:
+
+<!-- TODO Link to commit ae3f862 -->
+
+And `userCommands` is inside the single `programs.nixvim` block now as well. Much nicer.
+
+That probably looks like an enormous diff. Here it is ignore whitespace changes:
+
+```git
+git show --ignore-space-change ae3f862
+commit ae3f86253d565e951e1f8569f74c8fe9e7425d5e (HEAD -> markdown-formatting)
+Author: stoo johnston <scj@stooj.org>
+Date:   Sat May 3 22:47:23 2025 +0200
+
+    neovim: make room for other nixvim config in conform
+
+diff --git a/home/stooj/neovim/plugins/lsp/conform.nix b/home/stooj/neovim/plugins/lsp/conform.nix
+index adbd431..eeaf410 100644
+--- a/home/stooj/neovim/plugins/lsp/conform.nix
++++ b/home/stooj/neovim/plugins/lsp/conform.nix
+@@ -3,7 +3,8 @@
+   # conform.nvim
+   # Lightweight yet powerful formatter plugin for Neovim
+   # See https://github.com/stevearc/conform.nvim
+-  programs.nixvim.plugins.conform-nvim = {
++  programs.nixvim = {
++    plugins.conform-nvim = {
+       enable = true;
+       settings = {
+         formatters = {
+@@ -25,7 +26,7 @@
+         '';
+       };
+     };
+-  programs.nixvim.userCommands = {
++    userCommands = {
+       FormatDisable = {
+         bang = true;
+         desc = "Disable autoformat-on-save";
+@@ -67,4 +68,5 @@
+         range = true;
+       };
+     };
++  };
+ }
+ ```
+
+Next, I need to install prettierd. The conform nixvim module doesn't install the configured tools so they need to be installed separately. I didn't install nixfmt because it was installed in `treefmt.nix`.
+
+<!-- TODO Link to commit 34aa11a -->
+
+And configure conform to use prettierd with markdown files:
+
+
 # References
 
 - [neovim/nvim-lspconfig: Quickstart configs for Nvim LSP](https://github.com/neovim/nvim-lspconfig/)
