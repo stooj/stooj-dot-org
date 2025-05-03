@@ -14,7 +14,7 @@ There's no markdown formatting though, and while, you know... it's just markdown
 - [dprint](https://github.com/dprint/dprint): Pluggable and configurable code formatting platform written in Rust. It does markdown and a bunch of other things.
 - [grammarly](https://github.com/znck/grammarly): Send your file to grammarly. Discontinued, and anyway no thanks.
 - [harper_ls](https://github.com/automattic/harper): The Grammar Checker for Developers. Might be interesting to fix my writing words make better.
-- [htmx](https://github.com/ThePrimeagen/htmx-lsp): HTMLX but does markdown as well? From everyone's favourite Youtube superstar ThePrimeagen but I'm not writing [htmlx](https://htmx.org/) just now. 
+- [htmx](https://github.com/ThePrimeagen/htmx-lsp): HTMLX but does markdown as well? From everyone's favourite Youtube superstar ThePrimeagen but I'm not writing [htmlx](https://htmx.org/) just now.
 - [ltex](https://github.com/valentjn/ltex-ls): LTeX Language Server: LSP language server for LanguageTool 🔍✔️ with support for LaTeX 🎓, Markdown 📝, and others
 - [ltex_plus](https://github.com/ltex-plus/ltex-ls-plus): Maybe a fork of ltex-ls?
 - [markdown_oxide](https://github.com/Feel-ix-343/markdown-oxide): A Personal Knowledge Management language server. This looks _really_ interesting and might replace vimwiki for me. I'm not planning on using [Obsidian](https://obsidian.md/) though.
@@ -174,7 +174,7 @@ So, order of preference for trying these out is:
 
 ### Back to ltex
 
-The first hurdle for ltex_plus is that it's not available in nixvim. Well, not _yet_, it's available in the [main branch](https://nix-community.github.io/nixvim/plugins/lsp/servers/ltex_plus/index.html) but not in the version I'm using (nixos-24.11).
+The first hurdle for `ltex_plus` is that it's not available in nixvim. Well, not _yet_, it's available in the [main branch](https://nix-community.github.io/nixvim/plugins/lsp/servers/ltex_plus/index.html) but not in the version I'm using (nixos-24.11).
 
 So let's leave that one for now, shall we?
 
@@ -214,7 +214,7 @@ The spellchecking needs to go though. According [to the docs](https://writewithh
 
 <!-- TODO Insert image 38-broken_harper_config.png -->
 
-`"[\"harper-ls\"]"` might work? 
+`"[\"harper-ls\"]"` might work?
 
 <!-- TODO Link to commit 31bcec2 -->
 
@@ -272,7 +272,7 @@ Is there a way of "printing out" the end config for lspconfig? Maybe this vim co
 :lua vim.print(require("lspconfig")["harper_ls"])
 ```
 
-Nice! And lookee lookee. That does *not* look right!
+Nice! And lookee lookee. That does _not_ look right!
 
 <!-- TODO Insert image 38-harper_config_mistake.png -->
 
@@ -335,7 +335,7 @@ The last thing to do is to move the configuration back into the proper nix block
 I finally made it here. The option is between [dprint](https://github.com/dprint/dprint) and [prettier](https://prettier.io/). I'm a bit done with markdown linting and formatting because it's only fecking markdown after all. I don't even like it. So this is going to be a very shallow comparison.
 
 | Formatter | Pros            |
-|-----------|-----------------|
+| --------- | --------------- |
 | dprint    | written in rust |
 | prettier  | nicer website   |
 
@@ -433,7 +433,7 @@ index adbd431..eeaf410 100644
      };
 +  };
  }
- ```
+```
 
 Next, I need to install prettierd. The conform nixvim module doesn't install the configured tools so they need to be installed separately. I didn't install nixfmt because it was installed in `treefmt.nix`.
 
@@ -441,6 +441,34 @@ Next, I need to install prettierd. The conform nixvim module doesn't install the
 
 And configure conform to use prettierd with markdown files:
 
+<!-- TODO Link to commit 5209f56 -->
+
+Run `:ConformInfo` in my neovim session editing this markdown file:
+
+<!-- TODO Insert image 38-working_prettier_conform_info.png -->
+
+Nice! Now what happens when I save the file? It changes things. Lots of things.
+
+<!-- TODO Insert image 38-prettier_fixes_1.png -->
+
+- Stripped any trailing whitespace I might have accidentally left. Cool.
+- It modified the table header to be `| -- |` instead of `|----|`.
+- It's changed any italics using `*word*` to `_word_`. Fair enough.
+- But it's also applied the above to things that I didn't mean to be italics, like this:
+
+<!-- TODO Insert image 38-prettier_fixes_2.png -->
+
+I'll have to be careful about that. Fixed it by wrapping `ltex_plus` in backticks (as I should have originally done anyway).
+
+I've got to admit, that was all way harder than I thought it would be and I've had enough for the time being. Hopefully the next lot of neovim changes won't be so punishing.
+
+Done for now.
+
+```bash
+cd ~/code/nix/nix-config
+git checkout main
+git merge markdown-formatting
+```
 
 # References
 
