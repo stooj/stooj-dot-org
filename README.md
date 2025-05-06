@@ -23,6 +23,8 @@ I can have bad jokes though.
 - tmux
 - formatting for yaml files in config
 - Qutebrowser vim tool
+- Keyboard backlight
+- Single setting in `preferences.nix` for system font.
 
 ### Vim post TODO
 
@@ -37,8 +39,8 @@ I can have bad jokes though.
 - lsp for nix
 - smiley cmp source
 - More vim?
-    - clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
-    - set scrolloff=999?
+  - clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
+  - set scrolloff=999?
 
 ## Flameshot capture settings
 
