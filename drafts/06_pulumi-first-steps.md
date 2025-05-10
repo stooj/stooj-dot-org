@@ -26,15 +26,15 @@ Pulumi.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                           PULUMI IS GREAT THOUGH                           %%
-%%                      THEY DIDN'T PAY ME TO SAY *THAT*                      %%
+%%                       THEY DIDN'T PAY ME TO SAY THAT                       %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ```
 
 I don't want to have to manage state or locking or anything, and I'm already
-using GitHub, so I'm not dogmatic about using closed-source SaaS products. If
-you are, feel free to run your own git forge and state hosting. But pulumi makes
-it very easy to just get going with their website, so that's the way we're
-going.
+using GitHub, so I'm clearly not dogmatic about using closed-source SaaS
+products. If you are, feel free to run your own git forge and state hosting.
+But pulumi makes it very easy to just get going with their website, so that's
+the way we're going.
 
 A wee confession before I get started though; I'm going to do this on `proteus`
 to begin with (Gin's KDE-Neon installation). `drummer` still doesn't have any
@@ -43,7 +43,8 @@ web browser for this.
 
 And a password manager. You do have one of them, right? I'm using
 [BitWarden](https://bitwarden.com/); it's open source, self-hostable, and makes
-it easy for me to give them money (I have the Families plan).
+it easy for me to give them money (which is a brilliant thing for an open
+source project to do). (I have the Families plan).
 
 Right, so are you on your partner's working machine? Cool.
 
@@ -115,7 +116,7 @@ GitHub owner configuration value.
 And then it asks for a github authentication token. Uuuh... Whoops, press ENTER
 for the default blank one.
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara ec9dd05 -->
 
 Set the `github:owner` first - pulumi has a tool to write to the `Pulumi.yaml`
 file so you don't need to do it manually and risk breaking the YAML indentation.
@@ -124,7 +125,7 @@ file so you don't need to do it manually and risk breaking the YAML indentation.
 pulumi config set github:owner stooj
 ```
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara 8e951d2 -->
 
 And let's get an auth token for GitHub - go to https://github.com/settings/personal-access-tokens/new:
 
@@ -143,7 +144,7 @@ encrypted secrets (just remember to include the `--secret` flag):
 pulumi config set github:token github_pat_abigstringofsecretstuff --secret
 ```
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara c5d19da -->
 
 Check that it's working by creating the repo in the template (`demo-repo`)
 
@@ -175,17 +176,19 @@ Pulumi will destroy the repo (and the Pulumi stack). Nice!
 Time to actually configure our actual repo. First, we need to correct the name
 and give it a still vague but more accurate description.
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara 0b5eb68 -->
 
 One thing I never want to happen is for this repository to be deleted, even if
 we run another `pulumi destroy`. You can use a pulumi option to say "don't
 delete this even if I try to".
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara 7658ef7 -->
 
 The other thing we want to make sure is that the repo is actually _named_ the
 right thing. You can tell pulumi to use a literal name rather than adding a
 random string to the end of the name:
+
+<!-- TODO Link to commit pulumi-higara dd84bdc -->
 
 Let's create the repo again:
 
@@ -197,7 +200,7 @@ And watch it fail, because my code has syntax issues. Turns out I've **really**
 come to rely on language servers and linters and I didn't spot the errors.
 Embarassing.
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara 65ff310 -->
 
 We have a repo. Now to add the code we have to the repo we created. Uhm. Feels
 like pulling yourself up by your shoelaces.
@@ -216,11 +219,11 @@ than one repo to export, so lets change the name so we don't have collisions
 (and it better represents what the export actually is in the context of the
 project.)
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara a830174 -->
 
 Now to add our new repo. It's going to be pretty similar to the old one
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara 0fe36aa -->
 
 Deploy it!
 
@@ -243,7 +246,7 @@ git push --set-upstream origin main
 
 Finally, time to create a repo to host these ramblings.
 
-<!-- TODO Link to commit  -->
+<!-- TODO Link to commit pulumi-higara b155265 -->
 
 And turn my directory of markdown documents into a repo.
 
