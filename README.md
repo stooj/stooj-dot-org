@@ -14,7 +14,7 @@ I can have bad jokes though.
 - Fix nextcloud sync, tmp directory doesn't exist
 - stoo wiki
 - Configure git to `push.autoSetupRemote`
-- Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
+- Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`) ✓
 - Screen locking
 - Weechat
 - Matrix?
@@ -22,9 +22,11 @@ I can have bad jokes though.
 - install tree, eza, etc
 - tmux
 - formatting for yaml files in config
-- Qutebrowser vim tool
+- Qutebrowser vim tool ✓
 - Keyboard backlight
 - Single setting in `preferences.nix` for system font.
+- Qutebrowser search engine: https://wiki.nixos.org/wiki/
+- Qutebrowser home-manager search engine: https://home-manager-options.extranix.com/?query=&release=release-24.11
 
 ### Vim post TODO
 
