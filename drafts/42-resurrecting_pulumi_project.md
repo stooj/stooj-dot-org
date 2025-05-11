@@ -48,6 +48,51 @@ index dd65ea8..e20dcef 100644
    };
 ```
 
+... which means making a repo, which means revisiting my pulumi project from way back in <!-- TODO Link to post 06_pulumi-first-steps.md -->.
+
+Which makes me realise that I don't have that pulumi project on drummer. Or pulumi.
+
+I'll get the code first, which is still on GitHub (but I have _plans_).
+
+<!-- TODO Link to commit 18f92c5 -->
+
+```bash
+cd
+mr checkout
+```
+
+```
+mr checkout: /home/stooj/code/pulumi/higara
+Cloning into 'pulumi-higara'...
+remote: Enumerating objects: 34, done.
+remote: Counting objects: 100% (34/34), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 34 (delta 16), reused 33 (delta 15), pack-reused 0 (from 0)
+Receiving objects: 100% (34/34), 33.95 KiB | 409.00 KiB/s, done.
+Resolving deltas: 100% (16/16), done.
+mr checkout: failed to chdir to /home/stooj/code/pulumi/higara/: No such file or directory
+
+mr checkout: finished (1 failed; 3 skipped)
+```
+
+That failed. It checked out the code but it threw an error, because... the paths don't match. I told mr the directory was called `higara` but git cloned the repo into `pulumi-higara`.
+
+Try again:
+
+```bash
+cd ~/code/pulumi
+rm -rf pulumi-higara
+```
+
+<!-- TODO Link to commit 700001f -->
+
+```bash
+cd
+mr checkout
+```
+
+That's better. But pulumi will need installed along with the dependencies and such.
+
 ## Pulumi with Nix
 
 Pulumi isn't installed on drummer, and we could easily solve that by adding pulumi to our system packages. But... we don't _need_ pulumi to be installed globally; it's a _project_ dependency, not a system one.
