@@ -2,6 +2,52 @@ Title: Resurrecting the Pulumi Project
 Date: 2025-05-10
 Category: Pulumi
 
+TODO: Get the pulumi repo:
+
+```diff
+commit 18f92c5beb3bf4a82fd7d57b4fb6200975ebc42a
+Author: stoo johnston <scj@stooj.org>
+Date:   Thu May 8 08:22:19 2025 +0200
+
+    manage pulumi repo with mr
+
+diff --git a/home/stooj/mr.nix b/home/stooj/mr.nix
+index 77659a2..dd65ea8 100644
+--- a/home/stooj/mr.nix
++++ b/home/stooj/mr.nix
+@@ -8,6 +8,9 @@
+       "code/nix/nix-config" = {
+         checkout = "git clone 'git@github.com:stooj/nix-config.git'";
+       };
++      "code/pulumi/higara" = {
++        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git'";
++      };
+     };
+   };
+```
+
+```diff
+commit 700001f4ab7723ec0b35175c9887140582b82bf8 (HEAD -> notes-of-neorg, main)
+Author: stoo johnston <scj@stooj.org>
+Date:   Thu May 8 08:32:16 2025 +0200
+
+    clone pulumi-higara to correct directory
+
+diff --git a/home/stooj/mr.nix b/home/stooj/mr.nix
+index dd65ea8..e20dcef 100644
+--- a/home/stooj/mr.nix
++++ b/home/stooj/mr.nix
+@@ -9,7 +9,7 @@
+         checkout = "git clone 'git@github.com:stooj/nix-config.git'";
+       };
+       "code/pulumi/higara" = {
+-        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git'";
++        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git' higara";
+       };
+     };
+   };
+```
+
 ## Pulumi with Nix
 
 Pulumi isn't installed on drummer, and we could easily solve that by adding pulumi to our system packages. But... we don't _need_ pulumi to be installed globally; it's a _project_ dependency, not a system one.
