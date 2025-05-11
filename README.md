@@ -43,6 +43,7 @@ I can have bad jokes though.
 - More vim?
   - clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
   - set scrolloff=999?
+- Fix :CmpStatus nvim_lsp source
 
 ## Flameshot capture settings
 
