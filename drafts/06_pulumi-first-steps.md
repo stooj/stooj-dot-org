@@ -127,7 +127,9 @@ pulumi config set github:owner stooj
 
 <!-- TODO Link to commit pulumi-higara 8e951d2 -->
 
-And let's get an auth token for GitHub - go to https://github.com/settings/personal-access-tokens/new:
+And let's get an auth token for GitHub - go to [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new):
+
+<!-- TODO Turn this into a definition list somehow -->
 
 Token name: Pulumi bootstrap token
 Expiration: 7 days
