@@ -52,57 +52,176 @@ Neorg used to be an absolute _pig_ to install.
 
 Installed. 🥰
 
-Next I need to create a workspace to hold my norg files. That's going to be a little more involved because I want it to be version controlled, which means making a repo, which means revisiting my pulumi project from way back in <!-- TODO Link to post 06_pulumi-first-steps.md -->.
+Next I need to create a workspace to hold my norg files. That's going to be a little more involved because I want it to be version controlled. I'm going to host it on my personal git forge rather than GitHub, so it doesn't need to be managed with Pulumi just now.
 
-Which makes me realise that I don't have that pulumi project on drummer. Or pulumi.
+I'll let neorg create it to begin with and then sort out the gitification. Neorg is going to need a bunch of extra configuration, so time to make room:
 
-I'll get the code first, which is still on GitHub (but I have _plans_).
+<!-- TODO Link to commit 7623f6f -->
 
-<!-- TODO Link to commit 18f92c5 -->
+The configuration for neorg is a little messy because I need to pass in empty attribute sets but _force_ them to be passed to neovim.
 
-```bash
-cd
-mr checkout
-```
+For example, setting the defaults to be the defaults:
 
-```
-mr checkout: /home/stooj/code/pulumi/higara
-Cloning into 'pulumi-higara'...
-remote: Enumerating objects: 34, done.
-remote: Counting objects: 100% (34/34), done.
-remote: Compressing objects: 100% (17/17), done.
-remote: Total 34 (delta 16), reused 33 (delta 15), pack-reused 0 (from 0)
-Receiving objects: 100% (34/34), 33.95 KiB | 409.00 KiB/s, done.
-Resolving deltas: 100% (16/16), done.
-mr checkout: failed to chdir to /home/stooj/code/pulumi/higara/: No such file or directory
+<!-- TODO Link to commit 3df7680 -->
 
-mr checkout: finished (1 failed; 3 skipped)
-```
+Whoops, apparently I introduced a typo `neorg` → `neorga` at some point? Ah, in `7623f6f`.
 
-That failed. It checked out the code but it threw an error, because... the paths don't match. I told mr the directory was called `higara` but git cloned the repo into `pulumi-higara`.
+<!-- TODO Link to commit 08b2803 -->
 
-Try again:
+Turn on neorg's completion source and then add that source to `cmp`:
 
-```bash
-cd ~/code/pulumi
-rm -rf pulumi-higara
-```
+<!-- TODO Link to commit eed502f -->
 
-<!-- TODO Link to commit 700001f -->
+All very well, but I need a workspace to actually **test** that things are working.
+
+<!-- TODO Link to commit adc5f52 -->
+
+Neorg has automatically created the directory for me, and if I run `Neorg index` it'll take me to `~/code/docs/wiki/index.norg`.
+
+<!-- TODO Insert image 41-hello_neorg.png -->
+
+Brilliant. I've got neorg installed and I've got a directory to store my notes in. I'll chuck it in a git repo and send it to my git forge:
 
 ```bash
-cd
-mr checkout
+cd ~/code/docs/wiki
+git init
+# Oops. TODO: git config --globabl init.defaultBranch main
+git branch --move main
+git add .
+git commit --message "Initial commit"
+git remote add origin git@code.ginstoo.net:stooj/wiki.git
+git push --set-upstream origin main
 ```
 
-That's better. But pulumi will need installed along with the dependencies and such.
+Now that repo should be added to the mr config:
 
-This is going to need another branch.
+<!-- TODO Link to commit 7c640ff -->
 
-Merging `notes-of-neorg` and starting another branch.
+More neorg to do:
 
-Yay! We did it! Sort of!
+> The concealer module converts verbose markup elements into beautified icons for your viewing pleasure.
+
+Sounds good. Let's do this.
+
+<!-- TODO Link to commit c25257a -->
+
+<!-- TODO Insert image 41-neorg_concealer.png -->
+
+Very pretty. I think I'd like neovim's `conceallevel` to be set to `2` for neorg files though.
+
+This is going to need an extra `programs.nixvim` section, so as usual I'll make a nice wee `NOOP` commit to minimise the diff on the actual upcoming change.
+
+<!-- TODO Link to commit 199664c -->
+
+Now I can use `nixvim`'s `files` option to generate vim config files into my configuration. It's in the `ftplugin` directory, meaning it'll match based on filetype. It's called `norg.lua` so it'll automatically apply if I open a `norg` file in vim (you can check what filetype you've got by running `set ft ?`).
+
+<!-- TODO Link to commit 35dadb3 -->
+
+And it'll configure norg files to have to the (local) option `conceallevel=2`. See the difference?
+
+<!-- TODO Insert image 41-norg_concealer_with_conceallevel.png -->
+
+While I'm here, there are a couple of other nice wee changes I'd like to make to vim's configuration for `norg` files.
+
+First, I don't want vim to insert linebreaks when I hit a certain length of line. Lines can be as long as they want to be.
+
+> !NOTE
+> I actually _don't_ like this setting. Human eyes are terrible at reading long lines of text (especially mine) so I like to limit everything to 80 characters. But it makes it much easier to copy and paste text into legacy programs like web browsers etc.
+
+<!-- TODO Link to commit b68f497 -->
+
+But horizontal scrolling is awful in any circumstance, so wrap lines that are longer than the window.
+
+<!-- TODO Link to commit 94479e1 -->
+
+This still looks exicrible, as you can see from this screenshot. Look at where neovim is wrapping stuff!
+
+<!-- TODO Insert image 41-norg_line_wrapping_horror.png -->
+
+Look at where the words are being split:
+
+```
+espec
+ially
+
+lo
+ng
+```
+
+Nonsense.
+
+It's vim though. There's a setting to fix that.
+
+<!-- TODO Link to commit 8b91ea8 -->
+
+<!-- TODO Insert image 41-norg_line_wrapping_fixed.png -->
+
+That's much nicer.
+
+Last wee wrapping fix is the `breakindent` and the `breakindentopt` options.
+
+The `breakindent` option wraps lines so they start at the same level as their previous line.
+
+`breakindent` off (assuming the line is wrapped at the word "and"):
+
+```
+   I am indented and
+wrapped as well.
+```
+
+`breakindent` on:
+
+```
+   I am indented and
+   wrapped as well.
+```
+
+<!-- TODO Link to commit 3fedbf1 -->
+
+And the `breakindentopt "shift:2"` option indents following lines just a little bit more, which I prefer the look of:
+
+`breakindentopt=shift:2` off (assuming the line is wrapped at the word "and"):
+
+```
+   I am indented and
+     wrapped as well.
+```
+
+<!-- TODO Link to commit ce93d86 -->
+
+<!-- TODO Insert image 41-norg_line_break_indenting.png -->
+
+I'd like most of these settings for markdown files as well. The question is "where to put it?"
+
+<!-- TODO Link to commit 830bcb0 -->
+
+That'll do. And I want the same configuration as I had for neorg:
+
+<!-- TODO Link to commit d461ac3 -->
+
+Neorg has the ability to automatically inject metadata at the top of files. It's brilliant for auto-updating modified dates, so I'm having that please.
+
+<!-- TODO Link to commit 9988bf4 -->
+
+- `type = auto` means "generate the metadata if it isn't there. So it'll always be created.
+- `timezone = "utc"`, I _think_ I want all the times to be in New Eden UTC rather than local time. I'll see how this works out.
+- `update_date = true` means "change the updated date field automatically". Very nice.
+
+<!-- TODO Insert image 41-norg_metadata_generated.png -->
+
+That just appeared at the top of my file when I reopened it.
+
+There's more I want to do with neorg but I'll deal with that when I need it. Right now I have a repo to keep my notes and a nice UI to write them.
+
+```bash
+cd ~/code/nix/nix-config/
+git checkout main
+git merge notes-of-neorg
+```
+
+Yay! We did it!
 
 # References
 
 - [norg-specs/1.0-specification.norg at main · nvim-neorg/norg-specs](https://github.com/nvim-neorg/norg-specs/blob/main/1.0-specification.norg)
+- [Line length - Wikipedia](https://en.wikipedia.org/wiki/Line_length)
