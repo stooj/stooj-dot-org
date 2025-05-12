@@ -35,7 +35,8 @@ The project has been going for at least four years, but still has a lot of (exci
 
 But:
 
-- It _will_ support Getting Things Done
+- It _will_ support Getting Things Done (some day maybe)
+- It might support Taskwarrior?
 - It looks _superb_ in neovim
 - It is designed around it's own markup language (hold on, that sounds bad but listen) whose manifesto makes a really good argument about why markdown sucks.
 
@@ -52,7 +53,7 @@ Neorg used to be an absolute _pig_ to install.
 
 Installed. 🥰
 
-Next I need to create a workspace to hold my norg files. That's going to be a little more involved because I want it to be version controlled. I'm going to host it on my personal git forge rather than GitHub, so it doesn't need to be managed with Pulumi just now.
+Next I need to create a workspace to hold my norg files. That's going to be a little more involved because I want it to be version controlled. I'm going to host it on my personal git forge rather than GitHub so it doesn't need to be managed with Pulumi just now.
 
 I'll let neorg create it to begin with and then sort out the gitification. Neorg is going to need a bunch of extra configuration, so time to make room:
 
@@ -85,7 +86,7 @@ Brilliant. I've got neorg installed and I've got a directory to store my notes i
 ```bash
 cd ~/code/docs/wiki
 git init
-# Oops. TODO: git config --globabl init.defaultBranch main
+# Oops. TODO: git config --global init.defaultBranch main
 git branch --move main
 git add .
 git commit --message "Initial commit"
@@ -113,7 +114,7 @@ This is going to need an extra `programs.nixvim` section, so as usual I'll make 
 
 <!-- TODO Link to commit 199664c -->
 
-Now I can use `nixvim`'s `files` option to generate vim config files into my configuration. It's in the `ftplugin` directory, meaning it'll match based on filetype. It's called `norg.lua` so it'll automatically apply if I open a `norg` file in vim (you can check what filetype you've got by running `set ft ?`).
+Now I can use `nixvim`'s `files` option to generate vim config files into my configuration. It's in the `ftplugin` directory, meaning it'll match based on filetype. It's called `norg.lua` so it'll automatically apply if I open a `norg` file in vim (you can check what filetype you've got by running `set ft ?` (or `:echo &filetype` too. TIL)).
 
 <!-- TODO Link to commit 35dadb3 -->
 
@@ -211,7 +212,19 @@ Neorg has the ability to automatically inject metadata at the top of files. It's
 
 That just appeared at the top of my file when I reopened it.
 
-There's more I want to do with neorg but I'll deal with that when I need it. Right now I have a repo to keep my notes and a nice UI to write them.
+Now that I have metadata, there's another module that I'd like to add: [`core.summary`](https://github.com/nvim-neorg/neorg/wiki/Summary). This little gem parses the metadata of every `norg` file and populates `index.norg` automatically, filing everything according to category.
+
+<!-- TODO Link to commit f545692 -->
+
+Write some notes, make sure each one has a `title`, a `description`, and a list of `categories` and then run `:Neorg generate-workspace-summary` on a heading in `index.norg`. Magical.
+
+The last thing for now is enabling the [`core.journal`](https://github.com/nvim-neorg/neorg/wiki/Journal) module for diary entries. I use these occasionally and the `generate-workspace-summary` might make them more useful so long as I keep the categories up-to-date.
+
+I like my posts to be nested rather than all chucked into a single directory, so I've added the `nested` strategy to the configuration. And it's nicer than having another `__empty = null;` config option.
+
+<!-- TODO Link to commit e5b6515 -->
+
+There's probably more I want to do with neorg but I'll deal with that when I need it. Right now I have a repo to keep my notes and a nice UI to write them.
 
 ```bash
 cd ~/code/nix/nix-config/
@@ -223,5 +236,14 @@ Yay! We did it!
 
 # References
 
+- [neorg - nixvim docs](https://nix-community.github.io/nixvim/24.11/plugins/neorg/index.html?highlight=neorg#pluginsneorgenable)
 - [norg-specs/1.0-specification.norg at main · nvim-neorg/norg-specs](https://github.com/nvim-neorg/norg-specs/blob/main/1.0-specification.norg)
+- [Defaults · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Defaults)
+- [Completion · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Completion)
+- [Nvim Cmp · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Nvim-Cmp)
+- [Dirman · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Dirman)
+- [Concealer · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Concealer)
 - [Line length - Wikipedia](https://en.wikipedia.org/wiki/Line_length)
+- [Metagen · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Metagen)
+- [Summary · don't know how much Invim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Summary)
+  [Journal · nvim-neorg/neorg Wiki](https://github.com/nvim-neorg/neorg/wiki/Journal)
