@@ -14,6 +14,7 @@ I can have bad jokes though.
 - [ ] Fix nextcloud sync, tmp directory doesn't exist
 - [ ] stoo wiki
 - [ ] Configure git to `push.autoSetupRemote`
+- [ ] Configure git to `init.defaultBranch main`
 - [x] Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
 - [ ] Screen locking
 - [ ] Weechat
