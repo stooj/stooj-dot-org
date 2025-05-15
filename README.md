@@ -12,7 +12,7 @@ I can have bad jokes though.
 - [ ] Fix mouse focus for i3. I don't know what I'm doing but somehow I switch window focus sometimes.
 - [ ] Disable the trackpad when I'm typing
 - [ ] Fix nextcloud sync, tmp directory doesn't exist
-- [ ] stoo wiki
+- [x] stoo wiki
 - [ ] Configure git to `push.autoSetupRemote`
 - [ ] Configure git to `init.defaultBranch main`
 - [x] Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
@@ -20,7 +20,8 @@ I can have bad jokes though.
 - [ ] Weechat
 - [ ] Matrix?
 - [ ] Git forge
-- [ ] install tree, eza, etc
+- [x] install tree
+- [ ] install eza, etc
 - [ ] tmux
 - [ ] formatting for yaml files in config
 - [x] Qutebrowser vim tool
