@@ -2,51 +2,19 @@ Title: Resurrecting the Pulumi Project
 Date: 2025-05-10
 Category: Pulumi
 
-TODO: Get the pulumi repo:
+It's time to think about actually _publishing_ all this stuff. Getting it online somewhere.
 
-```diff
-commit 18f92c5beb3bf4a82fd7d57b4fb6200975ebc42a
-Author: stoo johnston <scj@stooj.org>
-Date:   Thu May 8 08:22:19 2025 +0200
+I haven't decided how I'm going to do that yet, but step one is to resurrect that pulumi project I created all the way back in... <!-- TODO Link to post 06_pulumi-first-steps.md -->.
 
-    manage pulumi repo with mr
+That was on a different machine, remember? So step `i` of step 1 is getting that repo onto drummer. That is easy at least.
 
-diff --git a/home/stooj/mr.nix b/home/stooj/mr.nix
-index 77659a2..dd65ea8 100644
---- a/home/stooj/mr.nix
-+++ b/home/stooj/mr.nix
-@@ -8,6 +8,9 @@
-       "code/nix/nix-config" = {
-         checkout = "git clone 'git@github.com:stooj/nix-config.git'";
-       };
-+      "code/pulumi/higara" = {
-+        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git'";
-+      };
-     };
-   };
-```
+<!-- TODO Link to commit 18f92c5beb3bf4a82fd7d57b4fb6200975ebc42a -->
 
-```diff
-commit 700001f4ab7723ec0b35175c9887140582b82bf8 (HEAD -> notes-of-neorg, main)
-Author: stoo johnston <scj@stooj.org>
-Date:   Thu May 8 08:32:16 2025 +0200
+Uhm, that didn't work though. I've asked mr to run the clone in `code/pulumi/higara` but told the git clone to clone into a directory called `pulumi-higara` (by _not_ telling git specifically where to clone).
 
-    clone pulumi-higara to correct directory
+<!-- TODO Link to commit 700001f4ab7723ec0b35175c9887140582b82bf8 -->
 
-diff --git a/home/stooj/mr.nix b/home/stooj/mr.nix
-index dd65ea8..e20dcef 100644
---- a/home/stooj/mr.nix
-+++ b/home/stooj/mr.nix
-@@ -9,7 +9,7 @@
-         checkout = "git clone 'git@github.com:stooj/nix-config.git'";
-       };
-       "code/pulumi/higara" = {
--        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git'";
-+        checkout = "git clone 'git@github.com:stooj/pulumi-higara.git' higara";
-       };
-     };
-   };
-```
+TODO GO FROM HERE
 
 ... which means making a repo, which means revisiting my pulumi project from way back in <!-- TODO Link to post 06_pulumi-first-steps.md -->.
 
