@@ -40,6 +40,7 @@ I can have bad jokes though.
 - [x] snippets
 - [x] lsp for markdown
 - [x] lsp for nix
+- [x] lsp for lua
 - [ ] smiley cmp source
 - [ ] More basic vim config?
   - [ ] clipboard with `xsel` and neovim ("unnamedplus") (use the plus register).
