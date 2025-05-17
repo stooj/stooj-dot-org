@@ -87,6 +87,8 @@ The next bit in [the example](https://github.com/the-nix-way/dev-templates/blob/
 
 There's a project called [flake-utils](https://github.com/numtide/flake-utils) that wraps a lot of flake-things in nix functions, including iterating through system targets so I'm going to add that as an input and use it instead.
 
+<!-- TODO Link to commit 8fb3f6ecf6c3fee7920e4f0fdaaa9d58ba9b2561 -->
+
 This flake doesn't _do_ anything yet, but I should probably check it works and generate the flake.lock file as well.
 
 ```bash
