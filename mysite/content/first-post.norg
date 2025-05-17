@@ -1,19 +1,197 @@
 @document.meta
-title: First Post
-description: 
+title: neorg
+description: getting started with neorg
 authors: [
   stooj
 ]
 categories: [
-  
+    note-taking
+    neorg
 ]
 created: 2025-05-17T22:55:34+02:00
-updated: 2025-05-17T21:09:10+0000
+updated: 2025-05-17T21:25:46+0000
 draft: false
 layout: default
 version: 1.1.1
 @end
 
-* First Post
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-  labore et dolore magna aliqua. Lobortis scelerisque fermentum dui faucibus in ornare.
+* Neorg
+** Vhyrro's video tutorials
+*** The basics
+**** What is Neorg? 
+     Neorg is an interface for the norg markup language. Norg is a substitute for markdown.
+     Neorg is an ecosystem on top of norg, to supercharge using the format. It can:
+     - manage directories
+     - track journals/diary
+     - lookup and manage links
+     - track tasks and projects
+     - create typeset documents
+**** Installation
+     Who knows at the moment? Lazy? Rocks? Lim? Just use nixvim and be done with it.
+**** Configuration
+     Neorg needs a few modules configured to run correctly:
+     - `core.defaults`: a meta module that houses other modules, provides the default behaviour for neorg.
+     - `core.concealer`: Converts markup elements into nice icons.
+     - `core.dirman`: Lowest level component of any workflow. Assigns name of a workspace to a location, which is used in many other modules to figure out where norg files are stored.
+**** Getting into neorg
+     If you don't open a norg file directly, you can run `:Neorg workspace default` and that will take you to the index file for the default workspace.
+     The index is your table of contents.
+**** Basic syntax.
+     Text is just written as text.
+     Headings let you structurally represent your notes as a tree.
+     Headings are created using `*` at the start of the line. The number of `*` represent the heading level:
+     - `*` = `<h1>`
+     - `***` = `<h3>`
+     - etc.
+     - The heading level is apparently unlimited.
+     - `***************` (h15) is fine!
+       The concealer makes headings look lovely. Neorg also /indents/ your headings to be in line, so h3 will look like it's indented inside h2.
+     - Surrounding any text in `*` will render it in *bold*.
+     - Slashes `/` for /italic/`.
+     - Underlines with `_` _underscores_
+     - Use `-` dashes for -Strikethrough-
+     - These can be mixed: /-*I'm italic and Strikethrough and bold*-/
+     - This formatting can be done in headings as well.
+
+     Creating a new note in the current working directory by using `<localleader>nn`
+
+     Links to other norg files use `{:path/to/file:}` syntax. Pressing `<Enter>` on a link will open that file. File paths are relative to the current file.
+
+     If a link points to a file that does not exist, it will be created for you.
+
+*** Workflow and Links
+
+    `:Neorg return` closes *all* your neorg buffers and returns you to wherever you were before. The idea is that you can be coding and suddenly want to make a note. You run `:Neorg index`, record your note, run `:Neorg return` and you're back to your code again.
+**** Todo items
+     Todo items are very flexible; they are not limited to unordered list.
+     They allow you to mark the "state" of something. Each thing can be assigned a /todo/ status.
+     Statuses:
+     - (x) done  → done with that (`x`)
+     - ( ) not done → not done yet (`<space>`)
+     - (-) pending → currently being worked on (`-`)
+     - (=) on hold → blocked by something else (`=`)
+     - (_) cancelled → ain't gonna do that (`_`)
+     - (?) ambiguous → needs further input (`?`)
+     - (!) important → high priority task (`!`)
+     - (+) recurring → recurring task with children (`+`)
+
+     ---
+    Keybind to cycle states: `<ctrl><space>` but it doesn't work for me.
+    A better approach is to use the `<localleader>t` and then:
+    - `d` for done
+    - `u` for undone
+    - `p` for pending
+    - `h` for on hold
+    - `c` for cancelled
+    - `a` for ambiguous
+    - `i` for important
+    - `r` for recurring.
+
+    Note: using one of the above keybinds will convert an item to a task if required.
+
+    Getting Things Done (GTD) is not supported yet, maybe it will some day.
+
+    See `:help neorg-tasks` for info.
+
+    You can nest todos by nesting the unordered lists. This has a lot of interesting effects:
+    - Marking a parent item as `done` will mark all children as `done`.
+    - Marking all child items as `done` will mark the parent item as `done`.
+    - Marking /some/ children as `done` will mark the parent as `pending`.
+    - Marking a child as `cancelled` will mark the parent as `done` if all other children are also `done`. Neorg understands that a cancelled task shouldn't be counted as blocking the parent task.
+    - Marking a child as `important` marks the parent as `pending`.
+    - Marking an item as `ambiguous` marks the parent as `on-hold`.
+ 
+      Note that /anything/ can be a task, so you can mark *headings* as tasks; assign whatever meaning you like to a pending heading. Nested headings will work the same way as nested lists 😅.
+
+    Also note that nested todo lists are not considered to be the same tree as a nested todo heading. So marking all todo list items as `done` will *not* change the todo heading.
+
+
+**** Nesting things
+     Nesting is explicit in norg files. It is not done using indentation like in markdown.
+
+**** Links
+     It's a single syntax to link to anything.
+
+     - To link to a single file, use `{:filename:}`.
+     - To link to a single file in a subdirectory, use `{:path/to/filename:}`.
+     - To link to a heading, use the heading name and an `*` like `{*** Nesting things}`.
+     -- Heading links are case and whitespace insensitive.
+     -- It is punctuation-sensitive.
+     -- The heading level needs to match
+     - If you don't want to match heading levels, you can use the `magic char` (`#`) which links to anything (go from top to bottom and try to find the closest match: `{# Todo items}`
+     - If neorg can't find the link, it will give some options about how to fix it:
+     -- `f` will try to fix the link by finding the closest thing using string matching.
+     -- `F` does the above but also doesn't limit itself to the type (say, heading 2)
+     - If you use `f` on a magic char link, it'll keep the magic char.
+     - If you use `F` on a magic char link, it'll switch it to the correct char (`#` → `***` for example)
+     - To hide the target in something nice, use `[]`: `{# Neorg}[go to the top]`
+     - With links, we care about the /location/ the most so it comes first.
+
+***** Anchor
+      - Anchors work the same as links, but they have a new property.
+      - Define the /name/ first, then the location. eg `[go to the top]{# Neorg}`
+      - With anchors, we care about the /name/ the most so it comes first.
+      - Anchors can be reused by only specifying the /name/ in `[]`, eg. `[go to the top]`
+      - `[foo]{:bar:}` is an anchor definition
+      - `[foo]` is an anchor declaration.
+      - You can use anchor declarations above where you define them.
+***** Linking to locations in other files
+      - Define the file, then add the heading: `{:path/to/filename:*** Heading}`
+      - Currently 
+***** Hyperlinks
+      - Just wrap the url in `{}`: `{https://en.wikipedia.org}[wikipedia]`
+***** Link to a non-org file
+      - `{file:///some/path}` (any file, opened via `(xdg-)open`)
+*** Workflow improvments
+**** Pivot
+     `core.pivot` lets you toggle or invert a list
+     To toggle, `<localleader>lt` (list toggle). Converts from unordered to ordered
+     To invert, `<localleader>li` (list invert). Adjacent lists are considered to be the same list, even if they are mixed! So invert flips mixed lists correctly.
+
+     @code norg
+     - Item 1
+     - Item 2
+     - Item 3
+     ~ Item 4
+     ~ Item 5
+     ~ Item 6
+     @end
+**** Itero
+     Continue items. By pressing `<Alt><enter>` it will start another of the same thing you're currently writing: headings, todos, lists
+**** Promo module
+     Promotes or demotes an object, headings, lists, quotes, etc. Uses the in-built indent/dedent operators `<<` and `>>` to promote and denote respectively.
+     By default this works recursively. To *not* recurse, use `<,` and `>.` (eg, let go of shift).
+     Insert mode keybinds `<ctrl+d>` and `<ctrl+t>` for promote and demote respectively.
+
+**** -Traverse headings- Table of contents
+     Neorg removed all modes in {https://github.com/nvim-neorg/neorg/blob/8fdd9b2986acfb4ce310bebfc338111793862f00/CHANGELOG.md#900-2024-07-16}[v9.0.0].
+     There's the `Neorg toc` that provides a navigatable window for moving between headings/sections.
+     `:Neorg toc left, right, qflist`
+
+     There is also a `.toc` macro that can be embedded in the doc. This will generate a table of contents when the norg file is exported to another format.
+     Adding a description to `.toc my descripton` will change the heading title for the table of contents.
+
+     The `core.qol.toc` module has a `close_after_use` option to auto-close the toc after you've navigated to something.
+
+**** The quickfix list
+
+     The quickfix list is a set of links to locations in a buffer. It's used by LSP or show_references etc.
+*** Metadata, Automation, Journals
+**** Metadata and summaries
+     `@document.meta` can contain anything, but should contain:
+     - `title`
+     - `description`
+
+     This means the index.norg file can be injected with info from the metadata.
+
+     - To generate the summaries, put the cursor over the heading where you want the summary to appear. Then run `:Neorg generate-workspace-summary`
+     - To regenerate, delete the current summary and run the command again.
+     - To generate sub-summaries, add a category and it'll only get generated for those categories
+
+**** Journal
+     It's a diary. Commands:
+     - `Neorg journal today`
+     - `Neorg journal tomorrow`
+     - `Neorg journal yesterday`
+     - `Neorg journal toc`  - generates and opens an `index.norg` file in the diary directory.
+     - `Neorg journal custom` - open a calendar view 🥰
