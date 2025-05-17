@@ -20,6 +20,9 @@
       in
       {
         devShells.default = pkgs.mkShell {
+          packages = [
+            norgolith.default
+          ];
         };
       }
     );
