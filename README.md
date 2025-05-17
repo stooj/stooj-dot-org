@@ -29,6 +29,7 @@ I can have bad jokes though.
 - [ ] Single setting in `preferences.nix` for system font.
 - [ ] Qutebrowser search engine: https://wiki.nixos.org/wiki/
 - [ ] Qutebrowser home-manager search engine: https://home-manager-options.extranix.com/?query=&release=release-24.11
+- [ ] kdeconnect
 
 ### Vim post TODO
 
