@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysite</title>
+    <link>http://localhost:3030</link>
+    <description>Latest posts</description>
+    <generator>Norgolith</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 17 May 2025 21:11:14 +0000</lastBuildDate>
+    <ttl>60</ttl>
+    <atom:link href="http:&#x2F;&#x2F;localhost:3030/rss.xml" rel="self" type="application/rss+xml" />
+
+    <image>
+      <url>http://localhost:3030&#x2F;assets&#x2F;favicon.png</url>
+      <title>mysite</title>
+      <link>http://localhost:3030</link>
+      <width>144</width>
+      <height>144</height>
+    </image>
+
+    
+  </channel>
+</rss>
