@@ -3,12 +3,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    norgolith.url = "github:NTBBloodbath/norgolith";
   };
   outputs =
     {
       self,
       nixpkgs,
       flake-utils,
+      norgolith,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
