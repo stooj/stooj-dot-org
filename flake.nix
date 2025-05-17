@@ -16,12 +16,12 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        norgolith = norgolith.packages.${system};
+        lith = norgolith.packages.${system};
       in
       {
         devShells.default = pkgs.mkShell {
           packages = [
-            norgolith.default
+            lith.default
           ];
         };
       }
