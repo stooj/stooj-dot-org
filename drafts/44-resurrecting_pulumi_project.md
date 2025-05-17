@@ -6,21 +6,9 @@ It's time to think about actually _publishing_ all this stuff. Getting it online
 
 I haven't decided how I'm going to do that yet, but step one is to resurrect that pulumi project I created all the way back in... <!-- TODO Link to post 06_pulumi-first-steps.md -->.
 
-That was on a different machine, remember? So step `i` of step 1 is getting that repo onto drummer. That is easy at least.
+That was on a different machine, remember? So step `i` of step 1 is getting that repo onto drummer. It is still on GitHub (but I have _plans_).
 
-<!-- TODO Link to commit 18f92c5beb3bf4a82fd7d57b4fb6200975ebc42a -->
-
-Uhm, that didn't work though. I've asked mr to run the clone in `code/pulumi/higara` but told the git clone to clone into a directory called `pulumi-higara` (by _not_ telling git specifically where to clone).
-
-<!-- TODO Link to commit 700001f4ab7723ec0b35175c9887140582b82bf8 -->
-
-TODO GO FROM HERE
-
-... which means making a repo, which means revisiting my pulumi project from way back in <!-- TODO Link to post 06_pulumi-first-steps.md -->.
-
-Which makes me realise that I don't have that pulumi project on drummer. Or pulumi.
-
-I'll get the code first, which is still on GitHub (but I have _plans_).
+That is easy at least.
 
 <!-- TODO Link to commit 18f92c5 -->
 
@@ -43,7 +31,7 @@ mr checkout: failed to chdir to /home/stooj/code/pulumi/higara/: No such file or
 mr checkout: finished (1 failed; 3 skipped)
 ```
 
-That failed. It checked out the code but it threw an error, because... the paths don't match. I told mr the directory was called `higara` but git cloned the repo into `pulumi-higara`.
+Uhm, that didn't work though. I've asked mr to run the clone in `code/pulumi/higara` but told the git clone to clone into a directory called `pulumi-higara` (by _not_ telling git specifically where to clone).
 
 Try again:
 
@@ -69,7 +57,8 @@ Time for another mind-blowing nix feature; you can have packages that are only a
 
 There are [lots](https://numtide.github.io/devshell/) and [lots](https://www.jetify.com/devbox) and [lots](https://devenv.sh/) and [lots](https://flox.dev/) of projects that do this, all built on Nix and NixPkgs. But they're all designed to help the poor souls that are running some legacy operating system. We're already running NixOS so we can use the native tooling for free. With a flake.
 
-I should look at [organist](https://github.com/nickel-lang/organist) some day though.
+> !NOTE
+> I should look at [organist](https://github.com/nickel-lang/organist) some day though.
 
 First have a look at the official flake templates and grab an empty one:
 
@@ -92,11 +81,11 @@ I'm not ready for flakehub yet so the nixpkgs input should just be the upstream 
 
 Wait, what? The **unstable** branch? You can do that?
 
-Yep. Packages for this project will pull from the freshest nixos packages branch without affecting the rest of the system. Neat.
+Yep! Packages for this project will pull from the freshest nixos packages branch without affecting the rest of the system. Neat.
 
-The next bit in [the example](https://github.com/the-nix-way/dev-templates/blob/main/pulumi/flake.nix) has a bunch of hard-coded target systems and then iterates through each one to generate a system configuration.
+The next bit in [the example](https://github.com/the-nix-way/dev-templates/blob/main/pulumi/flake.nix) has a bunch of hard-coded target systems and then iterates through each one to generate a system configuration. It'd be nice if I could abstract that away a bit.
 
-There's a project called [flake-utils](https://github.com/numtide/flake-utils) that wraps a lot of flake-things in nix functions so I'm going to add that as an input and use it instead.
+There's a project called [flake-utils](https://github.com/numtide/flake-utils) that wraps a lot of flake-things in nix functions, including iterating through system targets so I'm going to add that as an input and use it instead.
 
 This flake doesn't _do_ anything yet, but I should probably check it works and generate the flake.lock file as well.
 
@@ -118,7 +107,7 @@ nix develop
 
 That works. Log out of the shell again with ~`logout`~ `exit`.
 
-<!-- TODO Insert image 42-testing_empty_devshell.png -->
+<!-- TODO Insert image 44-testing_empty_devshell.png -->
 
 Now to install pulumi:
 
@@ -126,7 +115,7 @@ Now to install pulumi:
 
 And test it:
 
-<!-- TODO Insert image 42-devshell_with_pulumi.png -->
+<!-- TODO Insert image 44-devshell_with_pulumi.png -->
 
 Cool! Pulumi installed :) But only when I run this flake.
 
@@ -134,7 +123,7 @@ If I run pulumi, it'll stick a bunch of stuff in `~/.pulumi`. Yuck, that's a sha
 
 <!-- TODO Link to commit pulumi-higara baf623a -->
 
-<!-- TODO Insert image 42-pulumi_home_set.png -->
+<!-- TODO Insert image 44-pulumi_home_set.png -->
 
 I ran a wee `rm --recursive --force ~/.pulumi` as well to get rid of anything generated when I ran `pulumi about`.
 
@@ -144,19 +133,21 @@ I still need the actual programming language though, and I think Pulumi will nee
 
 So I've got a flake, and it seems to be working. Let's make it _seamless_ though. First, install `direnv` in my `nix-config`:
 
-<!-- TODO Link to commit 781c268 -->
+<!-- TODO Link to commit c7c4b01 -->
 
 Uhm, scratch that. There's an option to get `nix-direnv` in a single configuration step.
 
-<!-- TODO Link to commit af50f8d -->
+<!-- TODO Link to commit 395355c -->
 
 Hmm. Even that's not the best approach though. The [README](https://github.com/nix-community/nix-direnv?tab=readme-ov-file) recommends using home-manager.
 
 Undo that old commit first:
 
-<!-- TODO Link to commit 0499218 -->
+<!-- TODO Link to commit 8ce61df -->
 
 Then add it to `home/common/direnv.nix` and import that in the common home config.
+
+<!-- TODO Link to commit a93a0af -->
 
 > !NOTE
 > Ooh, nix-direnv links to a [home-manager search engine](https://home-manager-options.extranix.com/). And there's been another nix-users falling out over wiki ownership :sigh:. I'll fix them later.
@@ -167,7 +158,7 @@ I just `echo "use flake" >> .envrc` in the `pulumi/higara` project and my devshe
 
 <!-- TODO Link to commit pulumi-higara 5d912f7 -->
 
-<!-- TODO Insert image 42-direnv_enabled.png -->
+<!-- TODO Insert image 44-direnv_enabled.png -->
 
 Now we are cooking with gas. We might be ready to actually start doing things with Pulumi again.
 
@@ -232,7 +223,9 @@ nix search nixpkgs nodejs
 
 No, that's the most recent version I'm getting at the moment.
 
-OK, fine. Because this is a new "installation" of pulumi, it doesn't know what stack to use.
+OK, fine.
+
+Because this is a new "installation" of pulumi, it doesn't know what stack to use.
 
 ```bash
 pulumi stack select prod
@@ -280,11 +273,20 @@ Cool, so everything is working on `drummer` now. But generating a new GitHub tok
 
 A fix for this is to get further embedded with Pulumi Cloud. If I run pulumi in the Pulumi cloud instead of on my laptop, it won't _need_ a GitHub token. This is because I'll need to install the Pulumi GitHub app and it'll generate a token on-demand.
 
-But maybe I don't want to use GitHub anyway, and apparently Pulumi [better support for GitLab](https://www.pulumi.com/blog/gitlab-better-than-ever/). Oh, it doesn't support deployments yet though 😢. Well that's that idea out the window.
+But maybe I don't want to use GitHub anyway, and apparently Pulumi [better support for GitLab](https://www.pulumi.com/blog/gitlab-better-than-ever/) now. Oh, it doesn't support deployments yet though 😢. Well that's that idea out the window.
 
-But at least I now have my Pulumi project locally. Next step is to set up deployments.
+But at least I now have my Pulumi project locally.
 
-TODO: Set up deployments
+Now it's time to think about getting this blog hosted somewhere.
+
+```bash
+cd ~/code/nix/nix-config
+git checkout main
+git merge resurrecting-pulumi
+cd ~/code/pulumi/higara
+git checkout main
+git merge add-nix-flake
+```
 
 # References
 
