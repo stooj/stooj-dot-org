@@ -1,0 +1,16 @@
+rootUrl = 'http://localhost:3030'
+language = 'en-US'
+title = 'mysite'
+author = 'stooj'
+
+# Code blocks highlighting
+[highlighter]
+enable = false
+# engine = 'prism' # Can be 'prism' or 'hljs'. Defaults to 'prism'
+
+# RSS feed
+[rss]
+enable = true
+description = 'Latest posts'
+ttl = 60
+image = '/assets/favicon.png'
