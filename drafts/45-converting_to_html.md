@@ -343,6 +343,12 @@ That's looking much better already! Loving the live-reload.
 
 <!-- TODO Insert image 45-first_post_bare_html.png -->
 
+But if I'm going to seriously consider making my own theme and start writing html templates and stuff, I need editor support for that.
+
+Time to revisit my neovim configuration.
+
+TODO: Install linters and LSPs for html/css/javascript?
+
 # References
 
 - [Welcome To Norgolith - Norgolith](https://ntbbloodbath.github.io/norgolith/)
