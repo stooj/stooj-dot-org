@@ -2,6 +2,9 @@ Title: Converting to HTML
 Date: 2025-05-17T21:25:37
 Category: NixOS
 
+> !Warning
+> This post contains swearies
+
 I've been agonizing for ages about which static site generator I'm going to choose. Should I go for the "standard" and choose Hugo? Should I respect my roots and pick Pelican? Maybe today is the day I should learn Jekyll, like my father before me and his father before him? What's Jamstack? Astro seems fun, but a bit more work than I'm looking for. Eleventy seems to me like the next big thing.
 
 And then I discovered [Norgolith](https://ntbbloodbath.github.io/norgolith/). A static site generator that converts neorg directly to html? Go on...
@@ -118,7 +121,237 @@ That's fair. I should have said `norgolith = norgolith.stuff`.
 
 Woah. Am I starting to get the hang of this? I fixed in one go!
 
+```bash
+which lith
+```
+
+```
+/nix/store/sm7737ch8s1sn2g1m3gbsgrqp0kd3kmf-norgolith-0.2.0/bin/lith
+```
+
+OK, it's a small win but I'm pretty chuffed that that error didn't take me four hours to sort.
+
+I'll run through the first-site tutorial first to figure out the basics.
+
+## Norgolith first site
+
+I'm just running through the [Getting started Guide](https://ntbbloodbath.github.io/norgolith/docs/getting-started/) so I'll keep the chatter to a minimal.
+
+I **will** actually commit things as I go though. I get really mad trying to follow other folks blogs when they don't show the diffs after running stuff, because I'm probably using a different version and it'll generate something different and my replication ends up failing because I can't see what's happening because you said "just run this" without showing me the result. This annoying behaviour is a big inspiration for this blog and it's (frankly) daft adherence to tiny git commits for every bit of trivia.
+
+```bash
+lith init mysite
+```
+
+I just chose the defaults for now.
+
+<!-- TODO turn this into a definition list somehow -->
+
+- `Site URL: http://localhost:3030`
+- `Site URL: en-US`
+- `Site title: mysite`
+
+```
+10:45 PM 2025-05-17  INFO init: Initializing new Norgoliht site: mysite
+> Site URL: http://localhost:3030
+> Site language: en-US
+> Site title: mysite
+10:46 PM 2025-05-17  INFO init: Created site directories
+10:46 PM 2025-05-17  INFO init: Created norgolith.toml
+10:46 PM 2025-05-17  INFO init: Created index.norg
+10:46 PM 2025-05-17  INFO init: Created HTML templates
+10:46 PM 2025-05-17  INFO init: Created RSS template
+10:46 PM 2025-05-17  INFO init: Created assets
+10:46 PM 2025-05-17  INFO init: Congratulations, your new Norgolith site was created in /home/stooj/code/docs/stooj-dot-org/mysite
+
+Your new site structure:
+┌───────────┬────────────────────────────────────┐
+│ Directory │ Description                        │
+╞═══════════╪════════════════════════════════════╡
+│ content   │ Norg site content files            │
+├───────────┼────────────────────────────────────┤
+│ templates │ HTML templates                     │
+├───────────┼────────────────────────────────────┤
+│ assets    │ Site assets (JS, CSS, images, etc) │
+├───────────┼────────────────────────────────────┤
+│ theme     │ Site theme files                   │
+├───────────┼────────────────────────────────────┤
+│ public    │ Production artifacts               │
+├───────────┼────────────────────────────────────┤
+│ .build    │ Dev server artifacts               │
+└───────────┴────────────────────────────────────┘
+
+Please make sure to read the documentation at https://ntbbloodbath.github.io/norgolith
+```
+
+And here's what it generated:
+
+<!-- TODO Link to commit fad67b9 -->
+
+There's a "Tip":
+
+> You might want to add `.build` directory to your `gitignore`.
+
+Done.
+
+<!-- TODO Link to commit ad7fd35 -->
+
+What's next? Create a new post. Oooh, it has a special command for creating norg files, that might be annoying. I kinda want to treat this as a regular Neorg workspace, I don't want to have a separate process for _this_ workspace.
+
+Stop complaining, it's just the tutorial. It maybe doesn't mean you _have_ to do it, maybe it just ensures the metadata is set correctly or something.
+
+```bash
+lith new first-post.norg
+```
+
+```
+10:54 PM 2025-05-17 ERROR Unable to create site asset: not in a Norgolith site directory
+```
+
+OK, I guess I need to be in the right directory now
+
+```bash
+cd mysite
+lith new first-post
+```
+
+I'm just choosing the defaults again.
+
+<!-- TODO another description list please -->
+
+- `Title: First Post`
+- `Description: `
+- `Author(s): stooj`
+- `Categories: `
+- `Layout: default`
+
+```
+> Title: First Post
+> Description:
+> Author(s): stooj
+> Categories:
+> Layout: default
+10:57 PM 2025-05-17  INFO new: Created norg document: /home/stooj/code/docs/stooj-dot-org/mysite/content/first-post.norg
+```
+
+<!-- TODO Link to commit 7d9e730 -->
+
+Seems to be a pretty standard `norg` file. There's `draft: true` in the metadata, just like every post I've written so far 😀.
+
+Let's see what it looks like:
+
+```bash
+lith serve --open
+```
+
+```
+11:00 PM 2025-05-17  INFO serve: Starting development server...
+Server started in 30ms
+• Local:   http://localhost:3030/
+• Network: use --host to expose
+
+11:00 PM 2025-05-17  INFO serve: Opening the development server page using your browser ...
+11:00 PM 2025-05-17  INFO serve: GET / => 200 OK in 3.2ms
+11:00 PM 2025-05-17  INFO serve: GET /assets/norgolith.svg => 200 OK in 64.6µs
+11:00 PM 2025-05-17  INFO serve: GET /assets/style.css => 200 OK in 150.4µs
+11:00 PM 2025-05-17  INFO serve: GET /assets/norgolith.svg => 200 OK in 372.6µs
+```
+
+<!-- TODO Insert image 45-first_run_of_norgolith.png -->
+
+Uhm, nice. But that's not my first post. Ooh, it's not listed on the index (which is `content/index.norg`) but it's at [localhost:3030/first-post](http://localhost:3030/first-post)
+
+How does it look with elinks?
+
+<!-- TODO Insert image 45-first_post_in_elinks.png -->
+
+Pretty garbage actually. I think that's my default configuration of elinks though rather than the site's fault.
+
+Next I've to change the draft metadata to false and build the site:
+
+<!-- TODO Link to commit 70249c1 -->
+
+Building the site with:
+
+```bash
+lith build --minify
+```
+
+Nice, there's a bunch of html in the `public` directory. That'll be ignored in future but committing just now for the sake of anyone following along at home.
+
+<!-- TODO Link to commit 94e48d4 -->
+
+OK, what does it look like with some more norg-specific markdown? Here's a document I prepared earlier...
+
+<!-- TODO Link to commit 3e11b77 -->
+
+The only two extra metadata fields are `draft` and `layout`.
+
+But that actually kinda looks garbage.
+
+<!-- TODO Insert image 45-first_post_with_norg_content.png -->
+
+Huh, that's disappointing. Why is there no styling? No list markers? No differentiation between headings? TODO items? My lovely concealer icons?
+
+The `index.norg` page has piles of extra crap; do I need that everywhere or is the default theme very basic and so the `index.norg` has a bunch of extra stuff to make it "theme-agnostic"?
+
+Here's a clue from [the docs](https://ntbbloodbath.github.io/norgolith/docs/commands/#Theme-Management):
+
+```bash
+lith theme info
+```
+
+```
+09:05 AM 2025-05-18 ERROR Could not display the theme info: there is no theme installed
+```
+
+That probably has something to do with it 😁
+
+Looking through `style.css` <!-- TODO add link to style.css file --> it looks like there isn't any styling for much at all, and the base layer is setting font sizes to inherit (does that mean they all become the same size? I haven't written css for 10 years).
+
+<!-- TODO Insert image 45-first_post_dev_tools.png -->
+
+Oh, did I mention qutebrowser has devtools? 🥰
+
+OK, so maybe I need to make my own theme. I've been inspired by many many web designs since my first website in the Compuserve days, but my biggest inspiration at the moment is this glorious series of websites:
+
+- [Motherfucking Website](http://motherfuckingwebsite.com/).
+- [Better Motherfucking Website](http://bettermotherfuckingwebsite.com/)
+- [The Best Motherfucking Website](https://thebestmotherfucking.website/)
+
+They are all glorious. Actually, my end-goal is something like [the monospace web](https://owickstrom.github.io/the-monospace-web/), [Johnny Decimal](https://johnnydecimal.com/) or even [aviskarse's blog](https://www.aviskase.com/). I love the simple tree look and hopefully it won't be a nightmare to code.
+
+In my brain, a `Theme` and a `Template` need to be adjusted in parallel, but norgolith's docs talk about distributing themes without mentioning including templates in them (and the [example theme 404s](https://github.com/NTBBloodbath/norgolith-pico-theme) 🙁). Is the theory "all themes expect a set of classes to be present in the templates"? You can tell I've not done frontend stuff for years, huh?
+
+Looking at the pre-generated templates, the body and footer have some pre-defined classes but it's pretty minimal.
+
+OK, I'm going to strip everything out until I get a motherfucking website and then build from there, learning as I go.
+
+I do _want_ syntax highlighting for code samples, but step one is to get a zero-js site.
+
+<!-- TODO Link to commit 9b31606 -->
+
+I don't know what Tailwind is. Get rid of it.
+
+<!-- TODO Link to commit 0d819d9 -->
+
+I don't want my own css file either just now. Out it goes.
+
+<!-- TODO Link to commit 8c00dbb -->
+
+That's looking much better already! Loving the live-reload.
+
+<!-- TODO Insert image 45-first_post_bare_html.png -->
+
 # References
 
 - [Welcome To Norgolith - Norgolith](https://ntbbloodbath.github.io/norgolith/)
 - [Installation - Norgolith](https://ntbbloodbath.github.io/norgolith/docs/installation/)
+- [Getting Started - Norgolith](https://ntbbloodbath.github.io/norgolith/docs/getting-started/)
+- [Commands Reference - Norgolith](https://ntbbloodbath.github.io/norgolith/docs/commands/#Theme-Management)
+- [Motherfucking Website](http://motherfuckingwebsite.com/)
+- [Better Motherfucking Website](http://bettermotherfuckingwebsite.com/)
+- [The Best Motherfucking Website](https://thebestmotherfucking.website/)
+- [The Monospace Web](https://owickstrom.github.io/the-monospace-web/)
+- [A system to organise your life • Johnny.Decimal](https://johnnydecimal.com/)
+- [aviskase](https://www.aviskase.com/)
