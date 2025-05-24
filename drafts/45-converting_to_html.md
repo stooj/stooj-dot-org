@@ -34,11 +34,11 @@ I don't know what I'll need yet so I'm going to start with another blank flake a
 nix flake init -t templates#empty
 ```
 
-<!-- TODO Link to commit da58f0a -->
+<!-- TODO Link to commit stooj_dot_org da58f0a -->
 
 I'm going to build the flake line by line like I did last time, but maybe I should do the `.envrc` file first so I'm "auto-testing" my syntax as I go.
 
-<!-- TODO Link to commit e338903 -->
+<!-- TODO Link to commit stooj_dot_org e338903 -->
 
 And tell direnv that it's OK, I trust this file:
 
@@ -61,53 +61,53 @@ The `.direnv` directory needs to be ignored. I really should ignore that in my g
 > I was working with a team who hadn't used git a lot before, so they didn't know to ignore stuff and commited things to the repo that shouldn't have been commited.
 > If I had explicitly ignored those files in the `.gitignore` for the repo it wouldn't have been a problem.
 
-<!-- TODO Link to commit 5bc5b07 -->
+<!-- TODO Link to commit stooj_dot_org 5bc5b07 -->
 
 Back to the flake. Add a description:
 
-<!-- TODO Link to commit 892f1bf -->
+<!-- TODO Link to commit stooj_dot_org 892f1bf -->
 
 It's still broken. Yep, I know.
 
 Nixpkgs input so we can reference and install things in the flake. Unstable again!
 
-<!-- TODO Link to commit b3acc73 -->
+<!-- TODO Link to commit stooj_dot_org b3acc73 -->
 
 Because the flake is automatically running every time the `flake.nix` file changes, the lock file was automatically created after I added `nixpkgs`. Here it is:
 
-<!-- TODO Link to commit 2c21827 -->
+<!-- TODO Link to commit stooj_dot_org 2c21827 -->
 
 Add flake-utils again:
 
-<!-- TODO Link to commit 95f6ecf -->
+<!-- TODO Link to commit stooj_dot_org 95f6ecf -->
 
 And the updated `flake.lock` file that gets automatically adjusted:
 
-<!-- TODO Link to commit ff7d40d -->
+<!-- TODO Link to commit stooj_dot_org ff7d40d -->
 
 And finally the commit that will stop all the moaning and errors.
 
-<!-- TODO Link to commit b40837d -->
+<!-- TODO Link to commit stooj_dot_org b40837d -->
 
 That's better. Phew.
 
 We need norgolith as an input as well.
 
-<!-- TODO Link to commit d9d7e31 -->
+<!-- TODO Link to commit stooj_dot_org d9d7e31 -->
 
 And another auto-update to the `flake.lock` file:
 
-<!-- TODO Link to commit e6e3705 -->
+<!-- TODO Link to commit stooj_dot_org e6e3705 -->
 
 I wonder if I can do the same iteration thing with the `norgolith` input as I did with `nixpkgs`?
 
-<!-- TODO Link to commit ea30a85 -->
+<!-- TODO Link to commit stooj_dot_org ea30a85 -->
 
 Nothing exploded. That seems promising.
 
 Finally I can try to install norgolith.
 
-<!-- TODO Link to commit 7481f9c -->
+<!-- TODO Link to commit stooj_dot_org 7481f9c -->
 
 Ahh! It did explode, it was just delayed.
 
@@ -117,7 +117,7 @@ error: infinite recursion encountered
 
 That's fair. I should have said `norgolith = norgolith.stuff`.
 
-<!-- TODO Link to commit c1dcd22 -->
+<!-- TODO Link to commit stooj_dot_org c1dcd22 -->
 
 Woah. Am I starting to get the hang of this? I fixed in one go!
 
@@ -186,7 +186,7 @@ Please make sure to read the documentation at https://ntbbloodbath.github.io/nor
 
 And here's what it generated:
 
-<!-- TODO Link to commit fad67b9 -->
+<!-- TODO Link to commit stooj_dot_org fad67b9 -->
 
 There's a "Tip":
 
@@ -194,7 +194,7 @@ There's a "Tip":
 
 Done.
 
-<!-- TODO Link to commit ad7fd35 -->
+<!-- TODO Link to commit stooj_dot_org ad7fd35 -->
 
 What's next? Create a new post. Oooh, it has a special command for creating norg files, that might be annoying. I kinda want to treat this as a regular Neorg workspace, I don't want to have a separate process for _this_ workspace.
 
@@ -234,7 +234,7 @@ I'm just choosing the defaults again.
 10:57 PM 2025-05-17  INFO new: Created norg document: /home/stooj/code/docs/stooj-dot-org/mysite/content/first-post.norg
 ```
 
-<!-- TODO Link to commit 7d9e730 -->
+<!-- TODO Link to commit stooj_dot_org 7d9e730 -->
 
 Seems to be a pretty standard `norg` file. There's `draft: true` in the metadata, just like every post I've written so far 😀.
 
@@ -269,7 +269,7 @@ Pretty garbage actually. I think that's my default configuration of elinks thoug
 
 Next I've to change the draft metadata to false and build the site:
 
-<!-- TODO Link to commit 70249c1 -->
+<!-- TODO Link to commit stooj_dot_org 70249c1 -->
 
 Building the site with:
 
@@ -279,11 +279,11 @@ lith build --minify
 
 Nice, there's a bunch of html in the `public` directory. That'll be ignored in future but committing just now for the sake of anyone following along at home.
 
-<!-- TODO Link to commit 94e48d4 -->
+<!-- TODO Link to commit stooj_dot_org 94e48d4 -->
 
 OK, what does it look like with some more norg-specific markdown? Here's a document I prepared earlier...
 
-<!-- TODO Link to commit 3e11b77 -->
+<!-- TODO Link to commit stooj_dot_org 3e11b77 -->
 
 The only two extra metadata fields are `draft` and `layout`.
 
@@ -329,15 +329,15 @@ OK, I'm going to strip everything out until I get a motherfucking website and th
 
 I do _want_ syntax highlighting for code samples, but step one is to get a zero-js site.
 
-<!-- TODO Link to commit 9b31606 -->
+<!-- TODO Link to commit stooj_dot_org 9b31606 -->
 
 I don't know what Tailwind is. Get rid of it.
 
-<!-- TODO Link to commit 0d819d9 -->
+<!-- TODO Link to commit stooj_dot_org 0d819d9 -->
 
 I don't want my own css file either just now. Out it goes.
 
-<!-- TODO Link to commit 8c00dbb -->
+<!-- TODO Link to commit stooj_dot_org 8c00dbb -->
 
 That's looking much better already! Loving the live-reload.
 
@@ -347,7 +347,110 @@ But if I'm going to seriously consider making my own theme and start writing htm
 
 Time to revisit my neovim configuration.
 
-TODO: Install linters and LSPs for html/css/javascript?
+## Neovim for web editing
+
+Tree-sitter is already nicely set up for html & css since nixvim installs all grammars by default.
+
+`:InspectTree` shows a lovely tree of all the nodes:
+
+<!-- TODO Insert image 45-css_inspect_tree.png -->
+
+And `:TSInstallInfo` lists all the installed grammars. `html` and `css` are buried in that list somewhere, along with `htmldjango` which _might_ work fine for [Tera](https://keats.github.io/tera/) with a little tweaking?
+
+<!-- TODO Insert image 45-treesitter_grammar_list.png -->
+
+Rather than listing **all** the possible options for LSPs for these languages, trying them all and not getting on with any of them like my markdown experiment, I'm going to look at the [Neve](https://github.com/redyf/Neve) project and see if I can draw inspiration from there.
+
+Harper tells me that my last sentence was too long. It's not wrong.
+
+- Hmm, `Neve` [doesn't appear to have linters configured](https://github.com/redyf/Neve/blob/60bbc45c44ea7c5d144ee88bd391be5a4bd70c80/config/languages/nvim-lint.nix) for `css` or `html`.
+- No [lsp configured](https://github.com/redyf/Neve/blob/e9b8da91918ac43bf15d961cb31e1d2700ee00ec/config/lsp/lsp-nvim.nix) either. There's maybe no such thing for HTML (what would it even do?) but there ought to be a css one, right?
+- It uses [prettierd](https://github.com/redyf/Neve/blob/ef3633cecf32a0b0ff3c06859249b1c507e4405b/config/lsp/conform.nix) for `html` and `css` formatting. Already installed, so that should be easy.
+
+OK, so no help there. Those bindings look comprehensive though, so I should revisit that repo another day.
+
+Another resource is the [lsp configs list](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md) in the `nvim-lspconfig` repo. That's where nixvim's lsp configs are coming from. Searching for `css` gives:
+
+- [ast_grep](https://ast-grep.github.io/). Only works in projects that have `sgconfig.yaml` in their directory.
+- [biome](https://biomejs.dev). Toolchain of the web. Faster than prettier. Does javascript, typescript, and css. Written in rust. Definite front-line contender.
+- [css_variables](https://github.com/vunguyentuan/vscode-css-variables/tree/master/packages/css-variables-language-server). CSS variables autocompletion and go-to-definition.
+- [cssls](https://github.com/hrsh7th/vscode-langservers-extracted). Extracted from a vscode tool somehow. Needs some extra tweaking of luasnip to get working.
+- [cssmodules_ls](https://github.com/antonk52/cssmodules-language-server). Autocompletion and go-to-defintion. So an LSP then.
+- [emmet_language_server](https://github.com/olrtg/emmet-language-server). If I was using Emmet this would be very useful. If I was much better at web dev I'd be using Emmet. But I'm not either of those things.
+- [html](https://github.com/hrsh7th/vscode-langservers-extracted). Another extracted-from-vscode language server that will also need luasnip-related tweaking. Maybe it only does `css` embedded in `html` documents?
+- [smarty](https://github.com/landeaux/vscode-smarty-langserver-extracted). And more vscode castoffs.
+- [stylelint_lsp](https://github.com/bmatcuk/stylelint-lsp). A mighty CSS linter that helps you avoid errors and enforce conventions. That sounds very promising.
+- [tailwindcss](https://github.com/tailwindlabs/tailwindcss-intellisense). I'm not ready for a framework like tailwindcss yet but it does look rather wonderful. I want simple though.
+- [unocss](https://github.com/xna00/unocss-language-server). Instant on-demand atomic css engine. Whatever that means.
+- [vuels](https://github.com/vuejs/vetur/tree/master/server). Vue is a javascript framework that I'm not using.
+
+Overall that list is a bit disappointing as well. Maybe an LSP for plain old css doesn't really exist?
+
+It's come to this. Searching for [neovim for web development](https://duckduckgo.com/?q=neovim+for+web+development&ia=web) like a savage.
+
+Nothing particularly standing out there. Well. Let's try biome.
+
+<!-- TODO Link to commit 2794d17 -->
+
+And I'll try a test css file to see what happens.
+
+<!-- TODO Insert image 45-biome_no_reaction.png -->
+
+Nothing. Nothing happens. There's an error in that css and nothing is happening. Is Biome running?
+
+```
+:LspInfo
+```
+
+```
+- 0 client(s) attached to this buffer
+...
+  root directory: Not found.
+```
+
+So no, it's not running. It's enabled, but it didn't attach. Is that because of the lack of a `biome.json` file?
+
+Ugh! What is it with all these tools and insisting on files being present in the repo? I _collaborate_ and I can't just **decide** to mandate tool use for other people's projects.
+
+Fine. I'll add a stock file [from the docs](https://biomejs.dev/guides/configure-biome/) in the `mysite` test to see if that turns on Biome
+
+<!-- TODO Link to commit stooj_dot_org 139a5d0 -->
+
+And **now** it works.
+
+<!-- TODO Insert image 45-biome_with_local_config.png -->
+
+I've realised that first and foremost I want a linter. That's the most important _immediate_ requirement of an LSP. Renaming shit and looking up definitions and all that jazz is great for bigger codebases, but the very first thing I look for is a big message saying "this syntax is wrong you daftie".
+
+Like harper. Harper just asked me to kindly avoid using offensive language in the paragraph above. That's a useful suggestion Harper, thank you.
+
+When I open a file, I don't **care** about style guides. I don't **care** about per-project configuration. I care about the code being syntactically (and semantically) correct.
+
+So I want the linter enabled in biome even if I **don't** have a `biome.json` file somewhere.
+
+First of, get rid of that json file again:
+
+<!-- TODO Link to commit stooj_dot_org 47a362f -->
+
+Now back to my nix config, make some room for extra biome configuration:
+
+<!-- TODO Link to commit ec662e8 -->
+
+According to the [lspconfig docs](https://github.com/neovim/nvim-lspconfig/blob/12506bdaccd94964d4fb40367e36ade1960c8947/doc/configs.md#biome), there is a `workspace_required` option. What happens if I turn that off?
+
+<!-- TODO Link to commit b2f2812 -->
+
+Uh. Oops.
+
+<!-- TODO Link to commit 35a9c59 -->
+
+Hm. Still nothing attached.
+
+OK, I must be doing all this wrong. LSPs might _not_ be what I want after all. Life was a lot more simple back in the [ALE days](https://github.com/dense-analysis/ale).
+
+I want linting. I want to open a file and for neovim to tell me all the dumb stuff I've done. Is there anything in the [nixvim manual](https://nix-community.github.io/nixvim/24.11/index.html) that looks like it'll just handle linting for me?
+
+[plugins.lint](https://nix-community.github.io/nixvim/24.11/plugins/lint/index.html#pluginslintenable). 🤦 Well, that's pretty obvious now that you mention it. To try and keep this post from becoming a sprawling mess, it's time for a new post. I'm going to keep working in the same branch though because I've already committed the next three things and I can't be bothered unpicking them.
 
 # References
 
@@ -361,3 +464,10 @@ TODO: Install linters and LSPs for html/css/javascript?
 - [The Monospace Web](https://owickstrom.github.io/the-monospace-web/)
 - [A system to organise your life • Johnny.Decimal](https://johnnydecimal.com/)
 - [aviskase](https://www.aviskase.com/)
+- [Tera](https://keats.github.io/tera/)
+- [redyf/Neve: Neve is a Neovim configuration built with Nixvim, it allows you to use Nix language to manage Neovim plugins/options.](https://github.com/redyf/Neve)
+- [nvim-lspconfig/doc/configs.md at master · neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md)
+- [Configure Biome | Biome](https://biomejs.dev/guides/configure-biome/)
+- [nvim-lspconfig/doc/configs.md at 12506bdaccd94964d4fb40367e36ade1960c8947 · neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/12506bdaccd94964d4fb40367e36ade1960c8947/doc/configs.md#biome)
+- [dense-analysis/ale: Check syntax in Vim/Neovim asynchronously and fix files, with Language Server Protocol (LSP) support](https://github.com/dense-analysis/ale)
+- [Home - nixvim docs](https://nix-community.github.io/nixvim/24.11/index.html)
