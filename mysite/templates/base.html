@@ -9,6 +9,8 @@
             {% if metadata.authors %}<meta name="author" content="{{ config.author }}" />{% endif %}
             {% if metadata.categories %}<meta name="keywords" content="{{ metadata.categories | join(sep=", ") }}" />{% endif %}
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            {# User-defined styling #}
+            <link rel="stylesheet" href="/assets/style.css" />
             <link rel="icon" href="/assets/norgolith.svg" />
             <title>
                 {% block title %}
