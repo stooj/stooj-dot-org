@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="{{ config.language }}">
-<head>
-    {% block head %}
-    <meta charset="UTF-8" />
-    {% if metadata.description and not metadata.description == "nil" %}
-    <meta name="description" content="{{ metadata.description }}" />
-    {% endif %}
-    {% if metadata.authors %}
-    <meta name="author" content="{{ config.author }}" />
-    {% endif %}
-    {% if metadata.categories %}
-    <meta name="keywords" content="{{ metadata.categories | join(sep=", ") }}" />
-    {% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/assets/norgolith.svg" />
-    <title>{% block title %}{% endblock title %} - {{ config.title | title }}</title>
-    {% endblock head %}
-</head>
-<body>
-    <div id="content">{% block content %}{% endblock content %}</div>
-    <div id="footer">
-        {% block footer %}
-        &copy; Copyright {{ now(format="%Y") }} by {{ config.author }}.
-        {% endblock footer %}
-    </div>
-</body>
+    <head>
+        {% block head %}
+            <meta charset="UTF-8" />
+            {% if metadata.description and not metadata.description == "nil" %}
+                <meta name="description" content="{{ metadata.description }}" />
+            {% endif %}
+            {% if metadata.authors %}<meta name="author" content="{{ config.author }}" />{% endif %}
+            {% if metadata.categories %}<meta name="keywords" content="{{ metadata.categories | join(sep=", ") }}" />{% endif %}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="icon" href="/assets/norgolith.svg" />
+            <title>
+                {% block title %}
+                {% endblock title %}
+            - {{ config.title | title }}</title>
+        {% endblock head %}
+    </head>
+    <body>
+        <div id="content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <div id="footer">
+            {% block footer %}
+                &copy; Copyright {{ now(format="%Y") }} by {{ config.author }}.
+            {% endblock footer %}
+        </div>
+    </body>
 </html>
