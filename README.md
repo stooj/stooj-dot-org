@@ -15,6 +15,7 @@ I can have bad jokes though.
 - [x] stoo wiki
 - [ ] Configure git to `push.autoSetupRemote`
 - [ ] Configure git to `init.defaultBranch main`
+- [ ] Configure git to `pull.rebase false`
 - [x] Configure nix formatter (add `formatter = pkgs.nixfmt-rfc-style;` in flake and then run `nix fmt`)
 - [ ] Screen locking
 - [ ] Weechat
@@ -25,11 +26,14 @@ I can have bad jokes though.
 - [ ] tmux
 - [ ] formatting for yaml files in config
 - [x] Qutebrowser vim tool
-- [ ] Keyboard backlight
+- [ ] Keyboard backlight (`acpibacklight` or `wluma`?)
 - [ ] Single setting in `preferences.nix` for system font.
 - [ ] Qutebrowser search engine: https://wiki.nixos.org/wiki/
 - [ ] Qutebrowser home-manager search engine: https://home-manager-options.extranix.com/?query=&release=release-24.11
 - [ ] kdeconnect
+- [ ] atuin
+- [ ] starship
+- [ ] zsh
 
 ### Vim post TODO
 
